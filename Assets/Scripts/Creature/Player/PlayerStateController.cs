@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,10 +12,11 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float yVelocity = 0f;
     private float _defend = 15.0f;
 
-    // Ä«¸Ş¶ó ÃÊ±âÀ§Ä¡ ¼³Á¤
+    // ì¹´ë©”ë¼ ì´ˆê¸°ìœ„ì¹˜ ì„¤ì • 
     Vector3 camOffset = new Vector3(0.0f, 5.0f, -2.5f);
 
     private float _health = 100.0f;
+    private float _damaga = 10.0f;
 
     private Animator _animator;
 
@@ -71,7 +72,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     }
 
     /// <summary>
-    /// Å°º¸µå ÀÔ·ÂÀ» ¹Ş¾Æ¿È
+    /// í‚¤ë³´ë“œ ì…ë ¥ì„ ë°›ì•„ì˜´
     /// </summary>
     /// <returns></returns>
     public Vector2 GetMoveInput()
@@ -88,7 +89,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
         Vector3 move = moveDir * _moveSpeed;
 
-        // Áß·ÂÀû¿ë
+        // ì¤‘ë ¥ì ìš©
         if (_characterController.isGrounded)
         {
             yVelocity = -1f;
@@ -160,7 +161,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î°¡ ¸¶¿ì½º¸¦ ¹Ù¶óº¸°ÔÇÔ
+    /// í”Œë ˆì´ì–´ê°€ ë§ˆìš°ìŠ¤ë¥¼ ë°”ë¼ë³´ê²Œí•¨
     /// </summary>
     private void MouseControll()
     {

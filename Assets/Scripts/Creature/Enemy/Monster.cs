@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -31,7 +31,7 @@ public class Monster : MonoBehaviour, GetDamage
     protected float _chaseRange = 5.0f;
     protected float _attackRange = 1.0f;
 
-    protected Transform _targetTr = null;  // Å¸°ÙÀÇ À§Ä¡
+    protected Transform _targetTr = null;  // íƒ€ê²Ÿì˜ ìœ„ì¹˜
 
     protected float _targetDistance = 0.0f;
 
@@ -66,7 +66,7 @@ public class Monster : MonoBehaviour, GetDamage
         {
             if(_health > 0)
             {
-                _health -= 10.0f;   // ¼öÁ¤¿¹Á¤
+                _health -= 10.0f;   // ìˆ˜ì •ì˜ˆì •
             }
         }
     }
@@ -113,18 +113,18 @@ public class Monster : MonoBehaviour, GetDamage
                 transform.rotation = Quaternion.LookRotation(lookDir);
                 _isAttack = true;
                 _animator.SetTrigger("Attack");
-                
-                _enemyAttack?.AttackOn();
-
-                StartCoroutine(DisableHitbox(0.5f));
             }
         }
     }
 
-    private IEnumerator DisableHitbox(float time)
+    protected void AttackOn()
     {
-        yield return new WaitForSeconds(time);
-        _enemyAttack?.AttackOff();
+        _enemyAttack.EnableHitbox();
+    }
+
+    protected void AttackOff()
+    {
+        _enemyAttack.DisableHitbox();
     }
 
     protected void Dead()

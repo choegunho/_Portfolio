@@ -26,14 +26,14 @@ public class EnemyAttack : MonoBehaviour
         }
     }
 
-    public void AttackOn()
+    public void EnableHitbox()
     {
         _hasHit = false;
         this.GetComponent<BoxCollider>().enabled = true;
         Debug.Log("AttackOn");
     }
 
-    public void AttackOff()
+    public void DisableHitbox()
     {
         this.GetComponent<BoxCollider>().enabled = false;
         Debug.Log("AttackOff");
