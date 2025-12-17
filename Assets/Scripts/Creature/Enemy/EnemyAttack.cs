@@ -30,12 +30,10 @@ public class EnemyAttack : MonoBehaviour
     {
         _hasHit = false;
         this.GetComponent<BoxCollider>().enabled = true;
-        Debug.Log("AttackOn");
     }
 
     public void DisableHitbox()
     {
         this.GetComponent<BoxCollider>().enabled = false;
-        Debug.Log("AttackOff");
     }
 }

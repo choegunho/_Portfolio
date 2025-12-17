@@ -9,6 +9,7 @@ public enum State
     Idle,
     Chase,
     Attack,
+    Hit,
     Dead
 }
 
@@ -24,12 +25,16 @@ public class Monster : MonoBehaviour, GetDamage
 
     protected bool _isAttack = false;
 
+    protected bool _isDamaged = false;
+
     protected float _health = 100.0f;
 
     protected float _damage;
 
     protected float _chaseRange = 5.0f;
     protected float _attackRange = 1.0f;
+
+    private float _rotateSpeed = 5.0f;
 
     protected Transform _targetTr = null;  // 타겟의 위치
 
@@ -92,6 +97,10 @@ public class Monster : MonoBehaviour, GetDamage
     {
         if(_targetTr != null)
         {
+            Vector3 lookDir = _targetTr.position - transform.position;
+            lookDir.y = 0;
+            transform.rotation = Quaternion.Slerp(transform.rotation,
+                                 Quaternion.LookRotation(lookDir), _rotateSpeed * Time.deltaTime);
             _animator.SetBool("IsWalk", true);
             _nmAgent.isStopped = false;
             _nmAgent.SetDestination(_targetTr.position);
@@ -108,6 +117,10 @@ public class Monster : MonoBehaviour, GetDamage
         {
             Vector3 lookDir = _targetTr.position - transform.position;
             lookDir.y = 0;
+
+            transform.rotation = Quaternion.Slerp(transform.rotation,
+                                 Quaternion.LookRotation(lookDir), _rotateSpeed * Time.deltaTime);
+
             if (!_isAttack)
             {
                 transform.rotation = Quaternion.LookRotation(lookDir);
@@ -115,6 +128,12 @@ public class Monster : MonoBehaviour, GetDamage
                 _animator.SetTrigger("Attack");
             }
         }
+    }
+
+    protected void Hit()
+    {
+        _animator.SetTrigger("Damaged");
+        _isDamaged = false;
     }
 
     protected void AttackOn()
@@ -140,9 +159,19 @@ public class Monster : MonoBehaviour, GetDamage
 
     public void GetDamage(float damage)
     {
-        _health -= damage;
-    }
+        if (_isDead) return;
 
+        _health -= damage;
+
+        if (_health <= 0)
+        {
+            _currentState = State.Dead;
+            return;
+        }
+
+        _isDamaged = true;
+        _currentState = State.Hit;
+    }
     IEnumerator FSM()
     {
         while (!_isDead)
@@ -169,6 +198,13 @@ public class Monster : MonoBehaviour, GetDamage
                     _nmAgent.isStopped = true;
                     Attack();
                     yield return new WaitForSeconds(1.5f);
+                    break;
+
+                case State.Hit:
+                    _animator.SetBool("IsWalk", false);
+                    _nmAgent.isStopped = true;
+                    Hit();
+                    yield return new WaitForSeconds(0.5f);
                     break;
 
                 case State.Dead:
@@ -221,6 +257,7 @@ public class Monster : MonoBehaviour, GetDamage
             _targetDistance = Vector3.Distance(_targetTr.position, this.transform.position);
         }
     }
+
 
     // Update is called once per frame
     void Update()

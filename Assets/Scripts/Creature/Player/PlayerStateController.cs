@@ -135,25 +135,20 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     {
         if(_stateMachine.GetCurrentState() == _defendState)
         {
-            if(_health > 0)
+            damage -= _defend;
+            if (damage < 0)
             {
-                damage -= _defend;
-                if (damage < 0)
-                {
-                    damage = 0;
-                }
-                _health -= damage;
-                Debug.Log("Defend Success");
-                Debug.Log($"{_health}");
+                damage = 0;
             }
+            _health -= damage;
+            Debug.Log("Defend Success");
+            Debug.Log($"{_health}");
         }
         else
         {
-            if(_health > 0)
-            {
-                _health -= damage;
-                Debug.Log($"{_health}");
-            }
+            if (_stateMachine.GetCurrentState() == _deadState) return;
+            _health -= damage;
+            Debug.Log($"{_health}");
         }
     }
 
