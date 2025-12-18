@@ -1,267 +1,262 @@
-﻿using System.Collections;
-using TMPro;
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum State
-{
-    Idle,
-    Chase,
-    Attack,
-    Hit,
-    Dead
-}
-
 public class Monster : MonoBehaviour, GetDamage
 {
-    protected PlayerStateController _player;
+    protected enum State
+    {
+        Idle,
+        Chase,
+        Attack,
+        Hit,
+        Dead
+    }
 
-    protected EnemyAttack _enemyAttack;
+    protected float _chaseRange = 3.0f;   // 추격범위
+    protected float _attackRange = 1.0f;  // 공격범위
+    private float _rotateSpeed = 5.0f;  // 회전속도
+    private float _attackCoolDown = 2.0f;   // 공격 쿨
+    private float _attackTimer; // 공격시간
 
-    protected State _currentState = State.Idle;
+    private bool _canAttack = false;
 
-    protected bool _isDead = false;
+    private bool _isDead = false;
 
-    protected bool _isAttack = false;
+    private State _currentState = State.Idle;
 
-    protected bool _isDamaged = false;
+    private EnemyAttack _enemyAttack;
 
-    protected float _health = 100.0f;
+    // 플레이어 위치
+    protected Transform _player;
+
+    protected string _name;
+
+    protected float _health;
 
     protected float _damage;
 
-    protected float _chaseRange = 5.0f;
-    protected float _attackRange = 1.0f;
-
-    private float _rotateSpeed = 5.0f;
-
-    protected Transform _targetTr = null;  // 타겟의 위치
-
-    protected float _targetDistance = 0.0f;
+    private float _playerDistance = 0.0f;
 
     NavMeshAgent _nmAgent;
     Animator _animator;
 
-    public virtual float Damage
+    public float Damage
     {
         get { return _damage; }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected virtual void Start()
+    protected virtual void Awake()
     {
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
         _nmAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _enemyAttack = GetComponentInChildren<EnemyAttack>();
 
-        if(_enemyAttack != null)
+        if (_enemyAttack != null)
         {
             _enemyAttack._monster = this;
         }
 
         _nmAgent.speed = 1.5f;
-
-        StartCoroutine(FSM());
+        _nmAgent.updateRotation = true;
     }
 
-    protected virtual void OnTriggerEnter(Collider other)
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    protected virtual void Start()
     {
-        if(other.gameObject.CompareTag("Weapon"))
-        {
-            if(_health > 0)
-            {
-                _health -= 10.0f;   // 수정예정
-            }
-        }
-    }
 
-    protected virtual void Idle()
-    {
-        _animator.SetBool("IsWalk", false);
-
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _chaseRange);
-        
-        foreach(var col in colliders)
-        {
-            if (col.gameObject.tag.Contains("Player"))
-            {
-                _targetTr = col.gameObject.transform;
-
-                break;
-            }
-        }
-    }
-
-    protected virtual void Chase()
-    {
-        if(_targetTr != null)
-        {
-            Vector3 lookDir = _targetTr.position - transform.position;
-            lookDir.y = 0;
-            transform.rotation = Quaternion.Slerp(transform.rotation,
-                                 Quaternion.LookRotation(lookDir), _rotateSpeed * Time.deltaTime);
-            _animator.SetBool("IsWalk", true);
-            _nmAgent.isStopped = false;
-            _nmAgent.SetDestination(_targetTr.position);
-        }
-    }
-    private void OffAttack()
-    {
-        _isAttack = false;
-    }
-
-    protected virtual void Attack()
-    {
-        if (_targetTr != null)
-        {
-            Vector3 lookDir = _targetTr.position - transform.position;
-            lookDir.y = 0;
-
-            transform.rotation = Quaternion.Slerp(transform.rotation,
-                                 Quaternion.LookRotation(lookDir), _rotateSpeed * Time.deltaTime);
-
-            if (!_isAttack)
-            {
-                transform.rotation = Quaternion.LookRotation(lookDir);
-                _isAttack = true;
-                _animator.SetTrigger("Attack");
-            }
-        }
-    }
-
-    protected void Hit()
-    {
-        _animator.SetTrigger("Damaged");
-        _isDamaged = false;
-    }
-
-    protected void AttackOn()
-    {
-        _enemyAttack.EnableHitbox();
-    }
-
-    protected void AttackOff()
-    {
-        _enemyAttack.DisableHitbox();
-    }
-
-    protected void Dead()
-    {
-        _animator.SetTrigger("Dead");
-        Invoke("Destroy", 2.0f);
-    }
-
-    protected void Destroy()
-    {
-        Destroy(this.gameObject);
-    }
-
-    public void GetDamage(float damage)
-    {
-        if (_isDead) return;
-
-        _health -= damage;
-
-        if (_health <= 0)
-        {
-            _currentState = State.Dead;
-            return;
-        }
-
-        _isDamaged = true;
-        _currentState = State.Hit;
-    }
-    IEnumerator FSM()
-    {
-        while (!_isDead)
-        {
-            switch (_currentState)
-            {
-                case State.Idle:
-                    _animator.SetBool("IsWalk", false);
-                    _nmAgent.isStopped = true;
-                    Idle();
-                    yield return new WaitForSeconds(1.0f);
-                    break;
-
-                case State.Chase:
-                    _animator.SetBool("IsWalk", true);
-                    _nmAgent.isStopped = false;
-                    Chase();
-                    yield return new WaitForSeconds(0.01f);
-                    break;
-
-                case State.Attack:
-                    OffAttack();
-                    _animator.SetBool("IsWalk", false);
-                    _nmAgent.isStopped = true;
-                    Attack();
-                    yield return new WaitForSeconds(1.5f);
-                    break;
-
-                case State.Hit:
-                    _animator.SetBool("IsWalk", false);
-                    _nmAgent.isStopped = true;
-                    Hit();
-                    yield return new WaitForSeconds(0.5f);
-                    break;
-
-                case State.Dead:
-                    Dead();
-                    _isDead = true;
-                    break;
-            }
-        }
-    }
-
-    protected virtual void UpdateState()
-    {
-        if (_targetTr != null && _targetDistance < _attackRange)
-        {
-            if(_health <= 0)
-            {
-                _currentState = State.Dead;
-            }
-            else
-            {
-                _currentState = State.Attack;
-            }
-        }
-        else if (_targetTr != null && (_targetDistance >= _attackRange && _targetDistance <= _chaseRange))
-        {
-            if(_health <= 0)
-            {
-                _currentState = State.Dead;
-            }
-            else
-            {
-                _currentState = State.Chase;
-            }
-                
-        }
-        else
-        {
-            if(_health <= 0)
-            {
-                _currentState = State.Dead;
-            }
-            else
-            {
-                _currentState = State.Idle;
-            }
-        }
-
-        if (_targetTr != null)
-        {
-            _targetDistance = Vector3.Distance(_targetTr.position, this.transform.position);
-        }
     }
 
 
     // Update is called once per frame
-    void Update()
+     void Update()
     {
         UpdateState();
+        CheckState();
+    }
+
+    private void Idle()
+    {
+        if (_currentState == State.Dead) return;
+
+        _animator.SetBool("IsWalk", false);
+    }
+
+    private void Chase()
+    {
+        if (_currentState == State.Dead) return;
+
+        if (_player != null)
+        {
+            _nmAgent.SetDestination(_player.position);
+            _animator.SetBool("IsWalk", true);
+        }
+    }
+
+    protected virtual void Attack()
+    {
+        if (_currentState == State.Dead || _player == null) return;
+
+        Vector3 lookDir = (_player.position - transform.position).normalized;
+        lookDir.y = 0.0f;
+
+        transform.rotation = Quaternion.Slerp(transform.rotation,
+            Quaternion.LookRotation(lookDir), _rotateSpeed * Time.deltaTime);
+
+        if (!_canAttack) return;
+
+        _animator.SetTrigger("Attack");
+        _canAttack = false;
+    }
+
+    private void CanAttack()
+    {
+        _attackTimer += Time.deltaTime;
+
+        if (_attackTimer >= _attackCoolDown)
+        {
+            _canAttack = true;
+            _attackTimer = 0.0f;
+        }
+    }
+
+    private void AttackOn()
+    {
+        _enemyAttack.EnableHitbox();
+    }
+
+    private void AttackOff()
+    {
+        _enemyAttack.DisableHitbox();
+    }
+
+    private void Hit()
+    {
+        if (_currentState == State.Dead) return;
+
+        _animator.SetTrigger("Damaged");
+    }
+
+    private void Dead()
+    {
+        if(_isDead)
+        {
+            _animator.SetTrigger("Dead");
+            Invoke("DestroyMonster", 2.0f);
+        }
+    }
+
+    private void DestroyMonster()
+    {
+        Destroy(gameObject);
+    }
+
+    public void GetDamage(float damage)
+    {
+        if (_currentState == State.Dead) return;
+
+        _health -= damage;
+
+        _health = Mathf.Max(_health, 0);
+
+        Debug.Log($"{_name}: {_health}");
+
+        if (_health == 0)
+        {
+            _currentState = State.Dead;
+        }
+        else
+        {
+            _currentState = State.Hit;
+        }
+    }
+
+    public void CheckState()
+    {
+        if (_player != null)
+        {
+            if (_playerDistance <= _chaseRange && _playerDistance >= _attackRange)
+            {
+                if(_health == 0)
+                {
+                    _currentState = State.Dead;
+                }
+                else
+                {
+                    _currentState = State.Chase;
+                }
+            }
+            else if (_playerDistance < _attackRange)
+            {
+                if (_health == 0)
+                {
+                    _currentState = State.Dead;
+                }
+                else
+                {
+                    _currentState = State.Attack;
+                }
+            }
+            else
+            {
+                if(_health == 0)
+                {
+                    _currentState = State.Dead;
+                }
+                else
+                {
+                    _currentState = State.Idle;
+                }
+            }
+        }
+    }
+
+    private void UpdateState()
+    {
+        if (!_isDead)
+        {
+            switch (_currentState)
+            {
+                case State.Idle:
+                    _nmAgent.isStopped = true;
+                    _animator.SetBool("IsWalk", false);
+                    Idle();
+                    break;
+
+                case State.Chase:
+                    _nmAgent.updateRotation = true;
+                    _nmAgent.isStopped = false;
+                    Chase();
+                    break;
+
+                case State.Attack:
+                    _nmAgent.updateRotation = false;
+                    _nmAgent.isStopped = true;
+                    _animator.SetBool("IsWalk", false);
+                    Attack();
+                    break;
+
+                case State.Hit:
+                    _nmAgent.isStopped = true;
+                    _animator.SetBool("IsWalk", false);
+                    Hit();
+                    break;
+
+                case State.Dead:
+                    _animator.SetBool("IsWalk", false);
+                    _nmAgent.isStopped = true;
+                    _isDead = true;
+                    Dead();
+                    break;
+            }
+        }
+       
+        if (!_canAttack)
+        {
+            CanAttack();
+        }
+
+        _playerDistance = Vector3.Distance(_player.position, transform.position);
     }
 }

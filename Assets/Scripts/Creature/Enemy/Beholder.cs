@@ -5,24 +5,29 @@ public class Beholder : Monster
     [SerializeField] private GameObject _projectilePref;
     [SerializeField] private Transform _firePoint;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected override void Start()
+    protected override void Awake()
     {
+        _name = "Beholder";
         _health = 100;
         _damage = 10.0f;
 
+        _chaseRange = 5.0f;
         _attackRange = 3.0f;
 
-        base.Start();
+        base.Awake();
     }
 
-    protected override void Attack()
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    protected override void Start()
     {
-        base.Attack();
 
+    }
+
+    protected void FireProjectile()
+    {
         var projectile = Instantiate(_projectilePref, _firePoint.position, _firePoint.rotation);
 
-        Vector3 _moveDir = (_targetTr.position - projectile.transform.position).normalized;
+        Vector3 _moveDir = (_player.position - projectile.transform.position).normalized;
 
         _moveDir.y = 0.0f;
 

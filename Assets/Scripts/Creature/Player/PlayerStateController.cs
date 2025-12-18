@@ -16,7 +16,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     Vector3 camOffset = new Vector3(0.0f, 5.0f, -2.5f);
 
     private float _health = 100.0f;
-    private float _damaga = 10.0f;
+    private float _damage = 10.0f;
 
     private Animator _animator;
 
@@ -46,6 +46,11 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     {
         get { return _health; }
         set { _health = value; }
+    }
+
+    public float Damage
+    {
+        get { return _damage; }
     }
 
     private void Awake()
@@ -107,6 +112,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private void AttackStart()
     {
+        _weapon.GetComponent<PlayerAttack>().HasHit = false;
         _weapon.GetComponent<BoxCollider>().enabled = true;
     }
 
@@ -117,6 +123,9 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public void Attack()
     {
+        if (_stateMachine.GetCurrentState() == _attackState)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             _stateMachine.ChangeState(AttackState);
@@ -136,10 +145,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         if(_stateMachine.GetCurrentState() == _defendState)
         {
             damage -= _defend;
-            if (damage < 0)
-            {
-                damage = 0;
-            }
+            damage = Mathf.Max(damage, 0);
             _health -= damage;
             Debug.Log("Defend Success");
             Debug.Log($"{_health}");
