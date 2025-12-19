@@ -11,6 +11,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float gravity = -9.81f;
     private float yVelocity = 0f;
     private float _defend = 15.0f;
+    private bool _canAttack = true;
 
     // 카메라 초기위치 설정 
     Vector3 camOffset = new Vector3(0.0f, 5.0f, -2.5f);
@@ -119,16 +120,15 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private void AttackEnd()
     {
         _weapon.GetComponent<BoxCollider>().enabled = false;
+        _canAttack = true;
     }
 
     public void Attack()
     {
-        if (_stateMachine.GetCurrentState() == _attackState)
-            return;
-
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && _canAttack)
         {
             _stateMachine.ChangeState(AttackState);
+            _canAttack = false;
         }
     }
 
