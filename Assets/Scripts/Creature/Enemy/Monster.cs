@@ -12,7 +12,6 @@ public class Monster : MonoBehaviour, GetDamage
         Hit,
         Dead
     }
-
     protected float _chaseRange = 3.0f;   // 추격범위
     protected float _attackRange = 1.0f;  // 공격범위
     private float _rotateSpeed = 5.0f;  // 회전속도
