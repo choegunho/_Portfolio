@@ -12,17 +12,20 @@ public class Monster : MonoBehaviour, GetDamage
         Hit,
         Dead
     }
-    protected float _chaseRange = 3.0f;   // 추격범위
+    protected float _chaseRange = 3.5f;   // 추격범위
     protected float _attackRange = 1.0f;  // 공격범위
+    protected float _attackAngle = 30.0f;
     private float _rotateSpeed = 5.0f;  // 회전속도
-    private float _attackCoolDown = 2.0f;   // 공격 쿨
+    protected float _attackCoolDown = 2.0f;   // 공격 쿨
     private float _attackTimer; // 공격시간
 
     private bool _canAttack = false;
 
     private bool _isDead = false;
 
-    private State _currentState = State.Idle;
+    private bool _hasHit = false;
+
+    protected State _currentState = State.Idle;
 
     private EnemyAttack _enemyAttack;
 
@@ -122,14 +125,43 @@ public class Monster : MonoBehaviour, GetDamage
         }
     }
 
+    private void AttackDetect()
+    {
+        Vector3 center = transform.position + transform.forward * (_attackRange * 0.5f);
+
+        float halfAngleRad = _attackAngle * 0.5f * Mathf.Deg2Rad;
+        float cosThreshold = Mathf.Cos(halfAngleRad);
+
+        Collider[] hits = Physics.OverlapSphere(center, _attackRange);
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.gameObject.CompareTag("Player"))
+            {
+                Vector3 dir = (hit.transform.position - center).normalized;
+                float dot = Vector3.Dot(transform.forward, dir);
+
+                if (dot >= cosThreshold)
+                {
+                    if (hit.TryGetComponent<GetDamage>(out var damage))
+                    {
+                        if (_hasHit) return;
+                        damage.GetDamage(_damage);
+                        _hasHit = true;
+                    }
+                }
+            }
+        }
+    }
+
     private void AttackOn()
     {
-        _enemyAttack.EnableHitbox();
+        AttackDetect();
     }
 
     private void AttackOff()
     {
-        _enemyAttack.DisableHitbox();
+        _hasHit = false;
     }
 
     private void Hit()
@@ -154,7 +186,7 @@ public class Monster : MonoBehaviour, GetDamage
         Destroy(gameObject);
     }
 
-    public void GetDamage(float damage)
+    public virtual void GetDamage(float damage)
     {
         if (_currentState == State.Dead) return;
 

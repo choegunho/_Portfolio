@@ -16,13 +16,6 @@ public class Beholder : Monster
 
         base.Awake();
     }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected override void Start()
-    {
-
-    }
-
     protected void FireProjectile()
     {
         var projectile = Instantiate(_projectilePref, _firePoint.position, _firePoint.rotation);
