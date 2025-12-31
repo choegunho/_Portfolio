@@ -4,6 +4,7 @@ public class Slime : Monster
 {
     protected override void Awake()
     {
+        _name = "Slime";
         _health = 50.0f;
         _damage = 5.0f;
 

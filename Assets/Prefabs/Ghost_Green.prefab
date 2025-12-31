@@ -138,7 +138,8 @@ GameObject:
   - component: {fileID: 95000013357091332}
   - component: {fileID: -3787788342955705848}
   - component: {fileID: -5874277523424073348}
-  - component: {fileID: 2995083447522126969}
+  - component: {fileID: 567079344102318685}
+  - component: {fileID: -4205279097587797482}
   m_Layer: 0
   m_Name: Ghost_Green
   m_TagString: Untagged
@@ -219,8 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159ed8a9a9d7d3245bee0655cf77a0cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!143 &2995083447522126969
-CharacterController:
+--- !u!136 &567079344102318685
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -234,16 +235,41 @@ CharacterController:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 0.7
+  serializedVersion: 2
   m_Radius: 0.25
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_Height: 0.7
+  m_Direction: 1
   m_Center: {x: 0, y: 0.3, z: 0}
+--- !u!54 &-4205279097587797482
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010538092382}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 42
+  m_CollisionDetection: 0
 --- !u!1 &1000011621446260
 GameObject:
   m_ObjectHideFlags: 0

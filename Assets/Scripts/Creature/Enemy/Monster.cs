@@ -42,7 +42,7 @@ public class Monster : MonoBehaviour, GetDamage
 
     NavMeshAgent _nmAgent;
     Animator _animator;
-    CharacterController _characterController;
+    CapsuleCollider _collider;
 
     public float Damage
     {
@@ -55,7 +55,7 @@ public class Monster : MonoBehaviour, GetDamage
         _nmAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _enemyAttack = GetComponentInChildren<EnemyAttack>();
-        _characterController = GetComponent<CharacterController>();
+        _collider = GetComponent<CapsuleCollider>();
 
         if (_enemyAttack != null)
         {
@@ -176,7 +176,7 @@ public class Monster : MonoBehaviour, GetDamage
         if(_isDead)
         {
             _animator.SetTrigger("Dead");
-            _characterController.enabled = false;
+            _collider.enabled = false;
             Invoke("DestroyMonster", 2.0f);
         }
     }
