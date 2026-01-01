@@ -1355,6 +1355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e20d8c64d60c394a8bfc3bde36b2167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthBarPrefab: {fileID: 7752616648312226425, guid: 2f101eb38e410d542aa4bef474008d3e, type: 3}
 --- !u!136 &8513871106137098539
 CapsuleCollider:
   m_ObjectHideFlags: 0

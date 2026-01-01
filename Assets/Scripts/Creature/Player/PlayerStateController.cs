@@ -7,6 +7,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private float _moveSpeed = 2.5f;
     [SerializeField] private Camera _cam;
     [SerializeField] private GameObject _weapon;
+    [SerializeField] private GameObject _healthBarPrefab;
+    [SerializeField] private Transform worldCanvasTransform;
     private float _rotateSpeed = 360.0f;
     private float gravity = -9.81f;
     private float yVelocity = 0f;
@@ -28,6 +30,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private PlayerDefendState _defendState;
     private PlayerDeadState _deadState;
     private CharacterController _characterController;
+    private HPControl _healthUI;
 
     public StateMachine StateMachine => _stateMachine;
 
@@ -69,7 +72,9 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _attackState = new PlayerAttackState(this);
         _defendState = new PlayerDefendState(this);
         _deadState = new PlayerDeadState(this);
-
+        GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
+        _healthUI = hb.GetComponent<HPControl>();
+        _healthUI.Init(_health, this.transform);
     }
 
     private void Start()
@@ -147,6 +152,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             damage -= _defend;
             damage = Mathf.Max(damage, 0);
             _health -= damage;
+            _healthUI.TakeDamage(damage);
             Debug.Log("Defend Success");
             Debug.Log($"{_health}");
         }
@@ -154,6 +160,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         {
             if (_stateMachine.GetCurrentState() == _deadState) return;
             _health -= damage;
+            _healthUI.TakeDamage(damage);
             Debug.Log($"{_health}");
         }
     }

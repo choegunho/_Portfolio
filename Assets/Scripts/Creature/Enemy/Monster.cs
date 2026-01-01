@@ -12,6 +12,7 @@ public class Monster : MonoBehaviour, GetDamage
         Hit,
         Dead
     }
+
     protected float _chaseRange = 3.5f;   // 추격범위
     protected float _attackRange = 1.0f;  // 공격범위
     protected float _attackAngle = 30.0f;
@@ -27,8 +28,6 @@ public class Monster : MonoBehaviour, GetDamage
 
     protected State _currentState = State.Idle;
 
-    private EnemyAttack _enemyAttack;
-
     // 플레이어 위치
     protected Transform _player;
 
@@ -40,9 +39,10 @@ public class Monster : MonoBehaviour, GetDamage
 
     private float _playerDistance = 0.0f;
 
-    NavMeshAgent _nmAgent;
-    Animator _animator;
-    CapsuleCollider _collider;
+    private NavMeshAgent _nmAgent;
+    private Animator _animator;
+    private CapsuleCollider _collider;
+    private HPControl _healthUI;
 
     public float Damage
     {
@@ -54,13 +54,7 @@ public class Monster : MonoBehaviour, GetDamage
         _player = GameObject.FindGameObjectWithTag("Player").transform;
         _nmAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
-        _enemyAttack = GetComponentInChildren<EnemyAttack>();
         _collider = GetComponent<CapsuleCollider>();
-
-        if (_enemyAttack != null)
-        {
-            _enemyAttack._monster = this;
-        }
 
         _nmAgent.speed = 1.5f;
         _nmAgent.updateRotation = true;
@@ -69,7 +63,10 @@ public class Monster : MonoBehaviour, GetDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
     {
-
+        GameObject hb = Instantiate(HPBarManager.Instance.monsterHealthBarPrefab,
+            HPBarManager.Instance.worldCanvasTransform);
+        _healthUI = hb.GetComponent<HPControl>();
+        _healthUI.Init(_health, this.transform);
     }
 
 
@@ -191,6 +188,7 @@ public class Monster : MonoBehaviour, GetDamage
         if (_currentState == State.Dead) return;
 
         _health -= damage;
+        _healthUI.TakeDamage(damage);
 
         _health = Mathf.Max(_health, 0);
 
@@ -255,12 +253,14 @@ public class Monster : MonoBehaviour, GetDamage
                 case State.Idle:
                     _nmAgent.isStopped = true;
                     _animator.SetBool("IsWalk", false);
+                    _healthUI.DeActiveBar();
                     Idle();
                     break;
 
                 case State.Chase:
                     _nmAgent.updateRotation = true;
                     _nmAgent.isStopped = false;
+                    _healthUI.ActiveBar();
                     Chase();
                     break;
 
