@@ -9,7 +9,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private GameObject _weapon;
     [SerializeField] private GameObject _healthBarPrefab;
     [SerializeField] private Transform worldCanvasTransform;
-    private float _rotateSpeed = 360.0f;
+    private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
     private float yVelocity = 0f;
     private float _defend = 15.0f;
@@ -179,18 +179,20 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     /// </summary>
     private void MouseControll()
     {
-        Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+        Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector3 mouseScreenPos = Input.mousePosition;
 
-        RaycastHit hit;
+        Vector3 dir = mouseScreenPos - playerScreenPos;
 
-        if (Physics.Raycast(ray, out hit))
-        {
-            Vector3 lookDir = hit.point - transform.position;
-            lookDir.y = 0;
+        float targetAngle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
 
-            Quaternion targetRotation = Quaternion.LookRotation(lookDir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotateSpeed * Time.deltaTime);
-        }
+        Quaternion targetRot = Quaternion.Euler(0f, targetAngle, 0f);
+
+        // 부드러운 회전
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRot,
+            _rotateSpeed * Time.deltaTime);
     }
 
     private void LateUpdate()

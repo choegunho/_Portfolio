@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,6 +8,7 @@ public class Monster : MonoBehaviour, GetDamage
     protected enum State
     {
         Idle,
+        Wander,
         Chase,
         Attack,
         Hit,
@@ -19,6 +21,11 @@ public class Monster : MonoBehaviour, GetDamage
     private float _rotateSpeed = 5.0f;  // 회전속도
     protected float _attackCoolDown = 2.0f;   // 공격 쿨
     private float _attackTimer; // 공격시간
+
+    private float _wanderRange = 2.0f;  // 배회 범위
+    private float _wanderInterval = 3.0f;   // 배회 간격
+
+    private float _wanderTimer = 0.0f;  // 배회 시간
 
     private bool _canAttack = false;
 
@@ -82,6 +89,42 @@ public class Monster : MonoBehaviour, GetDamage
         if (_currentState == State.Dead) return;
 
         _animator.SetBool("IsWalk", false);
+
+        _currentState = State.Wander;
+    }
+
+    private void Wander()
+    {
+        _wanderTimer += Time.deltaTime;
+
+        if (_wanderTimer <= _wanderInterval)
+        {
+            Vector3 randomPos = GetRandomIdlePosition();
+
+            _animator.SetBool("IsWalk", true);
+            _nmAgent.isStopped = false;
+            _nmAgent.SetDestination(randomPos);
+
+            _wanderTimer = 0f;
+        }
+    }
+
+    private Vector3 GetRandomIdlePosition()
+    {
+        for (int i = 0; i < 5; i++) // 최대 5번 시도
+        {
+            Vector3 randomDir = Random.insideUnitSphere * _wanderRange;
+            randomDir.y = 0f;
+
+            Vector3 targetPos = transform.position + randomDir;
+
+            if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        return transform.position;
     }
 
     private void Chase()
@@ -255,6 +298,12 @@ public class Monster : MonoBehaviour, GetDamage
                     _animator.SetBool("IsWalk", false);
                     _healthUI.DeActiveBar();
                     Idle();
+                    break;
+
+                case State.Wander:
+                    _nmAgent.isStopped = false;
+                    _animator.SetBool("IsWalk", true);
+                    Wander();
                     break;
 
                 case State.Chase:
