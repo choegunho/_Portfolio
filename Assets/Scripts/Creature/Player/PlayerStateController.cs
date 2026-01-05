@@ -9,6 +9,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private GameObject _weapon;
     [SerializeField] private GameObject _healthBarPrefab;
     [SerializeField] private Transform worldCanvasTransform;
+    [SerializeField] private GameObject _shieldEffect;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
     private float yVelocity = 0f;
@@ -142,7 +143,13 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         if (Input.GetMouseButton(1))
         {
             _stateMachine.ChangeState(DefendState);
+            _shieldEffect.GetComponent<MeshRenderer>().enabled = true;
         }
+    }
+
+    public void DisableShieldEffect()
+    {
+        _shieldEffect.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void GetDamage(float damage)

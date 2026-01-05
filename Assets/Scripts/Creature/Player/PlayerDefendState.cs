@@ -34,6 +34,7 @@ public class PlayerDefendState : IState
 
     public void Exit()
     {
+        _player.DisableShieldEffect();
         _player.Animator.SetBool("Defend", false);
     }
 }

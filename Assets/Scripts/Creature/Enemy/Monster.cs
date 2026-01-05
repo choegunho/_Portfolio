@@ -7,7 +7,6 @@ public class Monster : MonoBehaviour, GetDamage
 {
     protected enum State
     {
-        Idle,
         Wander,
         Chase,
         Attack,
@@ -27,13 +26,15 @@ public class Monster : MonoBehaviour, GetDamage
 
     private float _wanderTimer = 0.0f;  // 배회 시간
 
+    private Vector3 _spawnPos;
+
     private bool _canAttack = false;
 
     private bool _isDead = false;
 
     private bool _hasHit = false;
 
-    protected State _currentState = State.Idle;
+    protected State _currentState = State.Wander;
 
     // 플레이어 위치
     protected Transform _player;
@@ -65,6 +66,8 @@ public class Monster : MonoBehaviour, GetDamage
 
         _nmAgent.speed = 1.5f;
         _nmAgent.updateRotation = true;
+        _nmAgent.avoidancePriority = Random.Range(30, 70);
+        _spawnPos = transform.position;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -80,35 +83,53 @@ public class Monster : MonoBehaviour, GetDamage
     // Update is called once per frame
      void Update()
     {
-        UpdateState();
+        if (_player != null)
+        {
+            _playerDistance = Vector3.Distance(_player.position, transform.position);
+        }
+
         CheckState();
+        UpdateState();
     }
 
-    private void Idle()
+    /// <summary>
+    /// 배회상태
+    /// </summary>
+    private void Wander()
     {
         if (_currentState == State.Dead) return;
 
-        _animator.SetBool("IsWalk", false);
+        // 목적지에 거의 도착했는지 체크
+        bool arrived = (!_nmAgent.pathPending &&
+                        _nmAgent.remainingDistance <= _nmAgent.stoppingDistance);
 
-        _currentState = State.Wander;
-    }
-
-    private void Wander()
-    {
-        _wanderTimer += Time.deltaTime;
-
-        if (_wanderTimer <= _wanderInterval)
+        if (arrived)
         {
-            Vector3 randomPos = GetRandomIdlePosition();
+            _wanderTimer += Time.deltaTime;
 
+            // 대기 시간(인터벌) 지나면 새 목적지
+            if (_wanderTimer >= _wanderInterval)
+            {
+                Vector3 randomPos = GetRandomIdlePosition();
+                _nmAgent.isStopped = false;
+                _nmAgent.SetDestination(randomPos);
+
+                _wanderTimer = 0f;
+            }
+
+            _animator.SetBool("IsWalk", false);
+        }
+        else
+        {
+            // 이동 중
             _animator.SetBool("IsWalk", true);
-            _nmAgent.isStopped = false;
-            _nmAgent.SetDestination(randomPos);
-
-            _wanderTimer = 0f;
         }
     }
 
+    /// <summary>
+    /// 스폰위치기준으로 랜덤위치 반환
+    /// </summary>
+    /// <returns></returns>
     private Vector3 GetRandomIdlePosition()
     {
         for (int i = 0; i < 5; i++) // 최대 5번 시도
@@ -116,7 +137,7 @@ public class Monster : MonoBehaviour, GetDamage
             Vector3 randomDir = Random.insideUnitSphere * _wanderRange;
             randomDir.y = 0f;
 
-            Vector3 targetPos = transform.position + randomDir;
+            Vector3 targetPos = _spawnPos + randomDir;
 
             if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
             {
@@ -209,6 +230,8 @@ public class Monster : MonoBehaviour, GetDamage
         if (_currentState == State.Dead) return;
 
         _animator.SetTrigger("Damaged");
+
+        _currentState = State.Chase;
     }
 
     private void Dead()
@@ -249,6 +272,9 @@ public class Monster : MonoBehaviour, GetDamage
 
     public void CheckState()
     {
+        if (_currentState == State.Hit || _currentState == State.Dead)
+            return;
+
         if (_player != null)
         {
             if (_playerDistance <= _chaseRange && _playerDistance >= _attackRange)
@@ -281,7 +307,7 @@ public class Monster : MonoBehaviour, GetDamage
                 }
                 else
                 {
-                    _currentState = State.Idle;
+                    _currentState = State.Wander;
                 }
             }
         }
@@ -293,16 +319,10 @@ public class Monster : MonoBehaviour, GetDamage
         {
             switch (_currentState)
             {
-                case State.Idle:
-                    _nmAgent.isStopped = true;
-                    _animator.SetBool("IsWalk", false);
-                    _healthUI.DeActiveBar();
-                    Idle();
-                    break;
-
                 case State.Wander:
                     _nmAgent.isStopped = false;
-                    _animator.SetBool("IsWalk", true);
+                    _healthUI.DeActiveBar();
+                    Debug.Log("WanderState");
                     Wander();
                     break;
 
@@ -339,7 +359,5 @@ public class Monster : MonoBehaviour, GetDamage
         {
             CanAttack();
         }
-
-        _playerDistance = Vector3.Distance(_player.position, transform.position);
     }
 }
