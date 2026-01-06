@@ -32,6 +32,9 @@ public class Monster : MonoBehaviour, GetDamage
 
     private bool _isDead = false;
 
+    // 여러번 호출 방지
+    private bool _deadCalled = false;
+
     private bool _hasHit = false;
 
     protected State _currentState = State.Wander;
@@ -50,7 +53,8 @@ public class Monster : MonoBehaviour, GetDamage
     private NavMeshAgent _nmAgent;
     private Animator _animator;
     private CapsuleCollider _collider;
-    private HPControl _healthUI;
+    protected HPControl _healthUI;
+    private RoomController _roomController;
 
     public float Damage
     {
@@ -63,6 +67,7 @@ public class Monster : MonoBehaviour, GetDamage
         _nmAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
         _collider = GetComponent<CapsuleCollider>();
+        _roomController = GetComponentInParent<RoomController>();
 
         _nmAgent.speed = 1.5f;
         _nmAgent.updateRotation = true;
@@ -236,16 +241,23 @@ public class Monster : MonoBehaviour, GetDamage
 
     private void Dead()
     {
+        if (_deadCalled) return;
+
         if(_isDead)
         {
+            _deadCalled = true;
+
             _animator.SetTrigger("Dead");
+
             _collider.enabled = false;
+
             Invoke("DestroyMonster", 2.0f);
         }
     }
 
     private void DestroyMonster()
-    {
+    {   
+        _roomController.DecreaseMonster();
         Destroy(gameObject);
     }
 

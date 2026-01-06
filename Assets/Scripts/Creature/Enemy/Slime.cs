@@ -17,6 +17,8 @@ public class Slime : Monster
 
         _health -= damage;
 
+        _healthUI.TakeDamage(damage);
+
         _health = Mathf.Max(_health, 0);
 
         Debug.Log($"{_name}: {_health}");

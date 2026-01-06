@@ -4,15 +4,16 @@ using UnityEngine.AI;
 
 public class MonsterSpawner : MonoBehaviour
 {
-    public GameObject[] _monsterPrefabs;
-    public int _spawnCount = 8;
-    public float _spawnRadius = 10.0f;
-    public float _minDistanceBetweenMonsters = 1.2f;
-    public float minDistanceFromPlayer = 5.0f;
-    public Transform player;
-
+    [SerializeField] private GameObject[] _monsterPrefabs;
+    [SerializeField] private int _spawnCount = 8;
+    private float _spawnRadius = 10.0f;
+    private float _minDistanceBetweenMonsters = 1.2f;
+    private float minDistanceFromPlayer = 5.0f;
+    [SerializeField] private Transform player;
 
     private List<Vector3> spawnedPositions = new List<Vector3>();
+
+    public int SpawnCount { get { return _spawnCount; } }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,7 +30,8 @@ public class MonsterSpawner : MonoBehaviour
 
             if (_spawnPos != Vector3.zero)
             {
-                Instantiate(monster, _spawnPos, Quaternion.identity);
+                Instantiate(monster, _spawnPos, Quaternion.identity, transform);
+
                 spawnedPositions.Add(_spawnPos);
             }
         }
