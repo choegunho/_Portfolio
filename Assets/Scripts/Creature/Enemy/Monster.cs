@@ -48,6 +48,8 @@ public class Monster : MonoBehaviour, GetDamage
 
     protected float _damage;
 
+    protected bool _isBoss = false;
+
     private float _playerDistance = 0.0f;
 
     private NavMeshAgent _nmAgent;
@@ -95,6 +97,12 @@ public class Monster : MonoBehaviour, GetDamage
 
         CheckState();
         UpdateState();
+    }
+
+    public void IsBoss(float damageMultiplier, float healthMultiplier)
+    {
+        _health *= healthMultiplier;
+        _damage *= damageMultiplier;
     }
 
     /// <summary>
