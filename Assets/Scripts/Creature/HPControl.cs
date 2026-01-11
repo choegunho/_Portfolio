@@ -9,15 +9,9 @@ public class HPControl : MonoBehaviour
     [SerializeField] private Vector3 offset = new Vector3(0.0f, 3.0f, 0.0f);
 
     private Transform _target;
-    private Camera _cam;
     private float _maxHealth;
 
     private float _currentHealth;
-
-    private void Awake()
-    {
-        _cam = Camera.main;
-    }
 
     public void Init(float maxHealth, Transform target)
     {
@@ -56,6 +50,11 @@ public class HPControl : MonoBehaviour
     public void DeActiveBar()
     {
         this.gameObject.SetActive(false);
+    }
+
+    public void UpdateOffset(Vector3 transform)
+    {
+        offset.y = transform.y + offset.y;
     }
 
     private void LateUpdate()

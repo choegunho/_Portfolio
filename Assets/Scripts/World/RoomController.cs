@@ -2,8 +2,15 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
+enum RoomType
+{
+    Normal,
+    Boss
+}
+
 public class RoomController : MonoBehaviour
-{  
+{
+    [SerializeField] private RoomType _roomType;
     private MonsterSpawner _monsterSpawner;
     private Doors[] _doors;
     private int _currentMonster;
@@ -55,8 +62,20 @@ public class RoomController : MonoBehaviour
 
     private void ActivateRoom()
     {
-        _monsterSpawner.enabled = true;
-        _currentMonster = _monsterSpawner.SpawnCount;
+        if(_roomType == RoomType.Boss)
+        {
+            _monsterSpawner.IsBoss = true;
+            _monsterSpawner.enabled = true;
+            _currentMonster = _monsterSpawner.SpawnCount;
+        }
+
+        else
+        {
+            _monsterSpawner.IsBoss = false;
+            _monsterSpawner.enabled = true;
+            _currentMonster = _monsterSpawner.SpawnCount;
+        }
+
     }
 
     public void ClearRoom()

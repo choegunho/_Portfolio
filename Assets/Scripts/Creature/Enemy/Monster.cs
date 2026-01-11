@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -20,6 +21,7 @@ public class Monster : MonoBehaviour, GetDamage
     private float _rotateSpeed = 5.0f;  // 회전속도
     protected float _attackCoolDown = 2.0f;   // 공격 쿨
     private float _attackTimer; // 공격시간
+    private Vector3 _baseScale;
 
     private float _wanderRange = 2.0f;  // 배회 범위
     private float _wanderInterval = 3.0f;   // 배회 간격
@@ -37,6 +39,8 @@ public class Monster : MonoBehaviour, GetDamage
 
     private bool _hasHit = false;
 
+    private bool _isBoss = false;
+
     protected State _currentState = State.Wander;
 
     // 플레이어 위치
@@ -47,8 +51,6 @@ public class Monster : MonoBehaviour, GetDamage
     protected float _health;
 
     protected float _damage;
-
-    protected bool _isBoss = false;
 
     private float _playerDistance = 0.0f;
 
@@ -75,6 +77,7 @@ public class Monster : MonoBehaviour, GetDamage
         _nmAgent.updateRotation = true;
         _nmAgent.avoidancePriority = Random.Range(30, 70);
         _spawnPos = transform.position;
+        _baseScale = transform.localScale;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -99,10 +102,19 @@ public class Monster : MonoBehaviour, GetDamage
         UpdateState();
     }
 
-    public void IsBoss(float damageMultiplier, float healthMultiplier)
+    // 보스 능력치 설정
+    public void IsBoss(float damageMultiplier, float healthMultiplier, float scaleMultiplier)
     {
+        Debug.Log("Boss!!");
+        _chaseRange = 10.0f;
         _health *= healthMultiplier;
         _damage *= damageMultiplier;
+        transform.localScale = _baseScale * scaleMultiplier;
+    }
+
+    public void ResetScale()
+    {
+        transform.localScale = Vector3.one;
     }
 
     /// <summary>
@@ -120,7 +132,7 @@ public class Monster : MonoBehaviour, GetDamage
         {
             _wanderTimer += Time.deltaTime;
 
-            // 대기 시간(인터벌) 지나면 새 목적지
+            // 대기 시간 지나면 새 목적지 설정
             if (_wanderTimer >= _wanderInterval)
             {
                 Vector3 randomPos = GetRandomIdlePosition();

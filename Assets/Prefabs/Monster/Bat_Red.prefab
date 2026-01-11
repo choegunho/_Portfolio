@@ -524,6 +524,7 @@ GameObject:
   - component: {fileID: 1798119432199141784}
   - component: {fileID: -4472013772930646387}
   - component: {fileID: -4042366553697089431}
+  - component: {fileID: 605750109623615168}
   m_Layer: 0
   m_Name: Bat_Red
   m_TagString: Untagged
@@ -579,7 +580,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1000011593744314}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.4
+  m_Radius: 0.1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -604,7 +605,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e20d8c64d60c394a8bfc3bde36b2167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarPrefab: {fileID: 7752616648312226425, guid: 2f101eb38e410d542aa4bef474008d3e, type: 3}
 --- !u!136 &-4472013772930646387
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -653,8 +653,20 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 42
+  m_Constraints: 46
   m_CollisionDetection: 0
+--- !u!114 &605750109623615168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011593744314}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2bde004f0f81b4081f2844839aeed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000011643250032
 GameObject:
   m_ObjectHideFlags: 0

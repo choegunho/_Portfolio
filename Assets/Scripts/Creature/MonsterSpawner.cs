@@ -10,6 +10,13 @@ public class MonsterSpawner : MonoBehaviour
     private float _minDistanceBetweenMonsters = 1.2f;
     private float minDistanceFromPlayer = 5.0f;
     [SerializeField] private Transform player;
+    private bool _isBoss = false;
+    private BossMonster _boss;
+
+    public bool IsBoss
+    {
+        set { _isBoss = value; }
+    }
 
     private List<Vector3> spawnedPositions = new List<Vector3>();
 
@@ -25,17 +32,36 @@ public class MonsterSpawner : MonoBehaviour
     {
         for (int i = 0; i < _spawnCount; i++)
         {
-            Vector3 _spawnPos = GetRandomSpawnPosition();
-            GameObject monster = RandomMonster(); 
+            Vector3 spawnPos = GetRandomSpawnPosition();
+            if (spawnPos == Vector3.zero) continue;
 
-            if (_spawnPos != Vector3.zero)
+            GameObject monsterPrefab = RandomMonster();
+            GameObject monsterInstance =
+                Instantiate(monsterPrefab, spawnPos, Quaternion.identity, transform);
+
+            spawnedPositions.Add(spawnPos);
+
+            if (_isBoss)
             {
-                Instantiate(monster, _spawnPos, Quaternion.identity, transform);
-
-                spawnedPositions.Add(_spawnPos);
+                BossMonster boss = monsterInstance.GetComponent<BossMonster>();
+                if (boss != null)
+                {
+                    Debug.Log("BossMonster Spawn!");
+                    boss.enabled = true;
+                    boss.Boss();
+                }
+            }
+            else
+            {
+                Monster monster = monsterInstance.GetComponent<Monster>();
+                if (monster != null)
+                {
+                    monster.ResetScale();
+                }
             }
         }
     }
+
 
     GameObject RandomMonster()
     {

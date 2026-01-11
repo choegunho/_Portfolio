@@ -238,6 +238,7 @@ GameObject:
   - component: {fileID: 8971789224127462276}
   - component: {fileID: 2302054266780022754}
   - component: {fileID: 7577718145249166418}
+  - component: {fileID: 1571296475534764220}
   m_Layer: 0
   m_Name: ChestMonsterPBRDefault
   m_TagString: Monster
@@ -318,7 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604732cfa4cc0c446974897103510769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarPrefab: {fileID: 7752616648312226425, guid: 2f101eb38e410d542aa4bef474008d3e, type: 3}
 --- !u!136 &2302054266780022754
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -369,6 +369,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 42
   m_CollisionDetection: 0
+--- !u!114 &1571296475534764220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139108481393625659}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2bde004f0f81b4081f2844839aeed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2462033005628232879
 GameObject:
   m_ObjectHideFlags: 0

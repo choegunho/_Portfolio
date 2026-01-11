@@ -588,6 +588,7 @@ GameObject:
   - component: {fileID: -8738048999783863271}
   - component: {fileID: 4234991248105559302}
   - component: {fileID: 452694107834628234}
+  - component: {fileID: -5092734340989191097}
   m_Layer: 0
   m_Name: Slime_Yellow
   m_TagString: Untagged
@@ -655,7 +656,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1000014251014320}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.25
+  m_Radius: 0.1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -718,3 +719,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 42
   m_CollisionDetection: 0
+--- !u!114 &-5092734340989191097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000014251014320}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2bde004f0f81b4081f2844839aeed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

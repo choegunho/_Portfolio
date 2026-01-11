@@ -556,6 +556,7 @@ GameObject:
   - component: {fileID: 139698128543948281}
   - component: {fileID: 478048985766063870}
   - component: {fileID: 3605312709510968520}
+  - component: {fileID: 8500758686639901525}
   m_Layer: 0
   m_Name: Slime_Green
   m_TagString: Untagged
@@ -623,7 +624,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1000012979649092}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.25
+  m_Radius: 0.1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -686,6 +687,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 42
   m_CollisionDetection: 0
+--- !u!114 &8500758686639901525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000012979649092}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2bde004f0f81b4081f2844839aeed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000013817168944
 GameObject:
   m_ObjectHideFlags: 0

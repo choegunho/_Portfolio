@@ -713,6 +713,7 @@ GameObject:
   - component: {fileID: 430464206476548581}
   - component: {fileID: 8959298023936607752}
   - component: {fileID: 3579238956712027853}
+  - component: {fileID: 4731932330743799792}
   m_Layer: 0
   m_Name: BeholderPBRDefault
   m_TagString: Monster
@@ -794,7 +795,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12313d198495300409ae6792f3e20ea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarPrefab: {fileID: 7752616648312226425, guid: 2f101eb38e410d542aa4bef474008d3e, type: 3}
   _projectilePref: {fileID: 3899944664789839268, guid: a1de0812ae3f0c64c87958c6deb37e0b, type: 3}
   _firePoint: {fileID: 1158748907459642219}
 --- !u!136 &8959298023936607752
@@ -847,6 +847,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 42
   m_CollisionDetection: 0
+--- !u!114 &4731932330743799792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3946248567117505829}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2bde004f0f81b4081f2844839aeed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4186217486392972628
 GameObject:
   m_ObjectHideFlags: 0
