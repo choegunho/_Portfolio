@@ -1,6 +1,8 @@
 ﻿using System;
 using Unity.VisualScripting;
+using Unity.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStateController : MonoBehaviour, GetDamage
 {
@@ -19,8 +21,16 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     // 카메라 초기위치 설정 
     Vector3 camOffset = new Vector3(0.0f, 5.0f, -2.5f);
 
+    // 플레이어 스탯
     private float _health = 100.0f;
+    private float _currentHealth;
     private float _damage = 10.0f;
+    private int _level = 0;
+    private float _levelUpExperience = 100.0f;  // 레벨업 까지 필요한 경험치
+    private float _experience = 0.0f;
+
+    private float _healthIncrease = 1.5f;
+    private float _damageIncrease = 1.2f;
 
     private Animator _animator;
 
@@ -60,6 +70,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private void Awake()
     {
+        _currentHealth = _health;
         if(_animator == null)
         {
             _animator = GetComponent<Animator>();
@@ -158,7 +169,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         {
             damage -= _defend;
             damage = Mathf.Max(damage, 0);
-            _health -= damage;
+            _currentHealth -= damage;
             _healthUI.TakeDamage(damage);
             Debug.Log("Defend Success");
             Debug.Log($"{_health}");
@@ -166,7 +177,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         else
         {
             if (_stateMachine.GetCurrentState() == _deadState) return;
-            _health -= damage;
+            _currentHealth -= damage;
             _healthUI.TakeDamage(damage);
             Debug.Log($"{_health}");
         }
@@ -174,7 +185,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public bool IsDead()
     {
-        if(_health <= 0)
+        if(_currentHealth <= 0)
         {
             return true;
         }
@@ -201,6 +212,33 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             targetRot,
             _rotateSpeed * Time.deltaTime);
     }
+
+    public void GainExperience(float amount)
+    {
+        Debug.Log($"Get {amount}exp");
+        _experience += amount;
+
+        while (_experience >= _levelUpExperience)
+        {
+            _experience -= _levelUpExperience;
+            LevelUp();
+        }
+    }
+
+    private void LevelUp()
+    {
+        EXPManager.instance.ShowLevelUpText();
+        _level++;
+        _levelUpExperience += 30.0f;
+
+        _health *= _healthIncrease;
+        _damage *= _damageIncrease;
+
+        _healthUI.UpdateMaxHealth(_health);
+        Debug.Log("Level Up!");
+        Debug.Log($"Level: {_level}");
+    }
+
 
     private void LateUpdate()
     {

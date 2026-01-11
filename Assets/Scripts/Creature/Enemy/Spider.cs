@@ -8,6 +8,7 @@ public class Spider : Monster
         _health = 120.0f;
         _damage = 25.0f;
         _chaseRange = 4.0f;
+        _experience = 30.0f;
 
         base.Awake();
     }

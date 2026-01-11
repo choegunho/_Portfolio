@@ -46,11 +46,11 @@ public class Monster : MonoBehaviour, GetDamage
     // 플레이어 위치
     protected Transform _player;
 
+    // 몬스터 정보
     protected string _name;
-
     protected float _health;
-
     protected float _damage;
+    protected float _experience = 10.0f;
 
     private float _playerDistance = 0.0f;
 
@@ -103,12 +103,13 @@ public class Monster : MonoBehaviour, GetDamage
     }
 
     // 보스 능력치 설정
-    public void IsBoss(float damageMultiplier, float healthMultiplier, float scaleMultiplier)
+    public void IsBoss(float damageMultiplier, float healthMultiplier, float scaleMultiplier, float exeperienceMultiplier)
     {
         Debug.Log("Boss!!");
         _chaseRange = 10.0f;
         _health *= healthMultiplier;
         _damage *= damageMultiplier;
+        _experience *= exeperienceMultiplier;
         transform.localScale = _baseScale * scaleMultiplier;
     }
 
@@ -270,6 +271,9 @@ public class Monster : MonoBehaviour, GetDamage
             _animator.SetTrigger("Dead");
 
             _collider.enabled = false;
+
+            _player.GetComponent<PlayerStateController>().GainExperience(_experience);
+            EXPManager.instance.ShowExpText(_experience);
 
             Invoke("DestroyMonster", 2.0f);
         }

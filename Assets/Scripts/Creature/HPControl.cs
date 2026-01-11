@@ -21,6 +21,11 @@ public class HPControl : MonoBehaviour
         UpdateHealthUI();
     }
 
+    public void UpdateMaxHealth(float maxHealth)
+    {
+        _maxHealth = maxHealth;
+    }
+
     public void TakeDamage(float damage)
     {
         _currentHealth -= damage;
