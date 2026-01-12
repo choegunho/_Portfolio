@@ -5,7 +5,7 @@ public class EXPManager : MonoBehaviour
 {
     public static EXPManager instance;
     private Transform _player;
-    [SerializeField] private GameObject _expPrefab;
+    [SerializeField] private GameObject _expTextPrefab;
     [SerializeField] private GameObject _levelUpPrefab;
     public Transform worldCanvasTransform;
     private float _offsetX;
@@ -22,7 +22,7 @@ public class EXPManager : MonoBehaviour
         _offset.x = Random.Range(-0.5f, 0.5f);
         _offset.y = Random.Range(0.1f, 0.5f);
 
-        GameObject obj = Instantiate(_expPrefab,
+        GameObject obj = Instantiate(_expTextPrefab,
             _player.position + _offset, 
             Quaternion.identity,
             worldCanvasTransform);

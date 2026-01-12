@@ -10,6 +10,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private Camera _cam;
     [SerializeField] private GameObject _weapon;
     [SerializeField] private GameObject _healthBarPrefab;
+    [SerializeField] private GameObject _expBarPrefab;
     [SerializeField] private Transform worldCanvasTransform;
     [SerializeField] private GameObject _shieldEffect;
     private float _rotateSpeed = 5.0f;
@@ -42,6 +43,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private PlayerDeadState _deadState;
     private CharacterController _characterController;
     private HPControl _healthUI;
+    private ExpBar _expUI;
 
     public StateMachine StateMachine => _stateMachine;
 
@@ -87,6 +89,9 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
         _healthUI = hb.GetComponent<HPControl>();
         _healthUI.Init(_health, this.transform);
+        GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
+        _expUI = eb.GetComponent<ExpBar>();
+        _expUI.Init(_levelUpExperience, this.transform);
     }
 
     private void Start()
@@ -223,6 +228,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             _experience -= _levelUpExperience;
             LevelUp();
         }
+        _expUI.GetExp(_levelUpExperience, _experience);
     }
 
     private void LevelUp()

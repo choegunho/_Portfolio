@@ -3564,7 +3564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b56ec47cdd2b5e240a6e88f7a0337455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _expPrefab: {fileID: 941820837688566364, guid: 8c020db8dd2990b49b4c510172c1e4b2, type: 3}
+  _expTextPrefab: {fileID: 941820837688566364, guid: 8c020db8dd2990b49b4c510172c1e4b2, type: 3}
   _levelUpPrefab: {fileID: 1825179828433340967, guid: 5fe6d7f81d08b4c4cb086667ca080c2f, type: 3}
   worldCanvasTransform: {fileID: 843299310}
 --- !u!1001 &174574503
@@ -17986,7 +17986,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1143988955956306560, guid: 1049a2fbaa7c5f84ba2dfbdb6621fa93, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.33
+      value: -0.98
       objectReference: {fileID: 0}
     - target: {fileID: 1143988955956306560, guid: 1049a2fbaa7c5f84ba2dfbdb6621fa93, type: 3}
       propertyPath: m_LocalPosition.y
@@ -17994,7 +17994,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1143988955956306560, guid: 1049a2fbaa7c5f84ba2dfbdb6621fa93, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.3
+      value: 11.82
       objectReference: {fileID: 0}
     - target: {fileID: 1143988955956306560, guid: 1049a2fbaa7c5f84ba2dfbdb6621fa93, type: 3}
       propertyPath: m_LocalRotation.w
@@ -18132,6 +18132,10 @@ PrefabInstance:
       propertyPath: _cam
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 4398676311701439605, guid: 1049a2fbaa7c5f84ba2dfbdb6621fa93, type: 3}
+      propertyPath: _expBarPrefab
+      value: 
+      objectReference: {fileID: 379981586465100571, guid: 722364c759672814cb98137e9773dd84, type: 3}
     - target: {fileID: 4398676311701439605, guid: 1049a2fbaa7c5f84ba2dfbdb6621fa93, type: 3}
       propertyPath: _shieldEffect
       value: 
