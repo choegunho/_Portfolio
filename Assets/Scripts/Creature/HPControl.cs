@@ -6,6 +6,7 @@ using static UnityEngine.GraphicsBuffer;
 public class HPControl : MonoBehaviour
 {
     [SerializeField] private Image _healthFill;
+    [SerializeField] private Text _healthText;
     [SerializeField] private Vector3 offset = new Vector3(0.0f, 3.0f, 0.0f);
 
     private Transform _target;
@@ -18,18 +19,23 @@ public class HPControl : MonoBehaviour
         _target = target;
         _maxHealth = maxHealth;
         _currentHealth = _maxHealth;
+        _healthText.text = $"{(int)_currentHealth}/{(int)_maxHealth}";
         UpdateHealthUI();
     }
 
-    public void UpdateMaxHealth(float maxHealth)
+    public void UpdateHealth(float maxHealth, float currentHealth)
     {
         _maxHealth = maxHealth;
+        _currentHealth = currentHealth;
+        _healthText.text = $"{(int)_currentHealth}/{(int)_maxHealth}";
+        UpdateHealthUI();
     }
 
     public void TakeDamage(float damage)
     {
         _currentHealth -= damage;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
+        _healthText.text = $"{(int)_currentHealth}/{(int)_maxHealth}";
         UpdateHealthUI();
     }
 

@@ -5,8 +5,8 @@ public class Slime : Monster
     protected override void Awake()
     {
         _name = "Slime";
-        _health = 50.0f;
-        _damage = 5.0f;
+        _health = 55.0f;
+        _damage = 6.0f;
         _experience = 20.0f;
 
         base.Awake();

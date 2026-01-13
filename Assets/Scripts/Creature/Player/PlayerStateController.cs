@@ -6,17 +6,17 @@ using UnityEngine.UI;
 
 public class PlayerStateController : MonoBehaviour, GetDamage
 {
-    [SerializeField] private float _moveSpeed = 2.5f;
     [SerializeField] private Camera _cam;
     [SerializeField] private GameObject _weapon;
     [SerializeField] private GameObject _healthBarPrefab;
     [SerializeField] private GameObject _expBarPrefab;
     [SerializeField] private Transform worldCanvasTransform;
     [SerializeField] private GameObject _shieldEffect;
+    [SerializeField] private LevelUpUI levelUpUI;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
     private float yVelocity = 0f;
-    private float _defend = 15.0f;
+
     private bool _canAttack = true;
 
     // 카메라 초기위치 설정 
@@ -25,12 +25,14 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     // 플레이어 스탯
     private float _health = 100.0f;
     private float _currentHealth;
+    private float _defend = 15.0f;
     private float _damage = 10.0f;
+    private float _moveSpeed = 2.5f;
     private int _level = 0;
     private float _levelUpExperience = 100.0f;  // 레벨업 까지 필요한 경험치
     private float _experience = 0.0f;
 
-    private float _healthIncrease = 1.5f;
+    private float _healthIncrease = 1.3f;
     private float _damageIncrease = 1.2f;
 
     private Animator _animator;
@@ -68,6 +70,26 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     public float Damage
     {
         get { return _damage; }
+        set { _damage = value; }
+    }
+
+    public float Defense
+    {
+        get { return _defend; }
+        set { _defend = value; }
+    }
+
+    public float CurrentHealth
+    {
+        get { return _currentHealth; }
+        set { _currentHealth = value; }
+    }
+
+
+    public float Speed
+    {
+        get { return _moveSpeed; }
+        set { _moveSpeed = value; }
     }
 
     private void Awake()
@@ -233,18 +255,22 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private void LevelUp()
     {
-        EXPManager.instance.ShowLevelUpText();
+        EXPManager.instance.LevelUpUI();
         _level++;
         _levelUpExperience += 30.0f;
 
         _health *= _healthIncrease;
         _damage *= _damageIncrease;
 
-        _healthUI.UpdateMaxHealth(_health);
+        _healthUI.UpdateHealth(_health, _currentHealth);
         Debug.Log("Level Up!");
         Debug.Log($"Level: {_level}");
     }
 
+    public void UpdateUI()
+    {
+        _healthUI.UpdateHealth(_health, _currentHealth);
+    }
 
     private void LateUpdate()
     {

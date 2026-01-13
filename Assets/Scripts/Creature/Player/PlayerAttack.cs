@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     private PlayerStateController _player;
+    [SerializeField] private GameObject _attackEffect;
 
     public float _damage => _player.Damage; 
 
@@ -27,6 +28,8 @@ public class PlayerAttack : MonoBehaviour
         if(other.TryGetComponent<GetDamage>(out var damaged))
         {
             if (_hashit) return;
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
+            Instantiate(_attackEffect, hitPoint, Quaternion.identity);
             damaged.GetDamage(_damage);
             _hashit = true;
         }
