@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using Unity.Multiplayer.Center.Common;
 
 public class LevelUpUI : MonoBehaviour
 {
@@ -9,7 +10,13 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private AbilityDatabase _abilityDatabase;
     [SerializeField] private PlayerStateController _player;
 
-    private List<ChoiceAbility> _abilities = new();
+    private List<ChoiceAbility> _abilities = new List<ChoiceAbility>();
+    private List<AbilityData> _pool = new List<AbilityData>();
+
+    private void Awake()
+    {
+        _pool  = new List<AbilityData>(_abilityDatabase._abilities);
+    }
 
     public void Show()
     {
@@ -17,7 +24,7 @@ public class LevelUpUI : MonoBehaviour
 
         ClearCards();
 
-        List<AbilityData> randomAbilities = GetRandomAbilities(3);
+        List<AbilityData> randomAbilities = GetRandomAbilities(_pool, 3);
 
         foreach (var ability in randomAbilities)
         {
@@ -49,19 +56,42 @@ public class LevelUpUI : MonoBehaviour
         _abilities.Clear();
     }
 
-    private List<AbilityData> GetRandomAbilities(int count)
+    private List<AbilityData> GetRandomAbilities(List<AbilityData> abilities, int count)
     {
-        List<AbilityData> pool = new List<AbilityData>(_abilityDatabase._abilities);
+        List<AbilityData> pool = new List<AbilityData>(abilities);
 
-        List<AbilityData> result = new();
+        List<AbilityData> result = new List<AbilityData>();
 
         for (int i = 0; i < count && pool.Count > 0; i++)
         {
-            int index = Random.Range(0, pool.Count);
-            result.Add(pool[index]);
-            pool.RemoveAt(index); // 중복 방지
+            AbilityData ability = GetRandomAbility(pool);
+
+            if (ability == null)
+                break;
+
+            result.Add(ability);
+            pool.Remove(ability);
         }
 
         return result;
+    }
+
+    public static AbilityData GetRandomAbility(List<AbilityData> abilities)
+    {
+        int totalWeight = 0;
+        foreach (var ability in abilities)
+            totalWeight += ability.weight;
+
+        int rand = Random.Range(0, totalWeight);
+        int current = 0;
+
+        foreach (var ability in abilities)
+        {
+            current += ability.weight;
+            if (rand < current)
+                return ability;
+        }
+
+        return null;
     }
 }

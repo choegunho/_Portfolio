@@ -10,5 +10,7 @@ public abstract class AbilityData : ScriptableObject
 
     public Sprite icon;
 
+    public int weight;
+
     public abstract void Apply(PlayerStateController player);
 }

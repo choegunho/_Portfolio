@@ -17,6 +17,10 @@ public class PlayerDefendState : IState
 
     public void Execute()
     {
+        if(Input.GetMouseButton(0) && _player.CanDefendAttack())
+        {
+            _player.DefendAttack();
+        }
         if (Input.GetMouseButtonUp(1))
         {
             Vector2 input = _player.GetMoveInput();

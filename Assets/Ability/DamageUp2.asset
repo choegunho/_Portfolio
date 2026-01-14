@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ae85775021911c4abcad8630efcfdc0, type: 3}
-  m_Name: DamageUp
+  m_Name: DamageUp2
   m_EditorClassIdentifier: 
-  _abilityName: "\uACF5\uACA9\uB825 \uC0C1\uC2B9"
-  _description: "\uACF5\uACA9\uB825\uC774 3\uB9CC\uD07C \uC99D\uAC00\uD569\uB2C8\uB2E4"
-  icon: {fileID: -214140954, guid: a5129965d9f7c604cb1842f6662f7e07, type: 3}
-  _value: 3
+  _abilityName: "\uACF5\uACA9\uB825 \uC99D\uAC00"
+  _description: "\uACF5\uACA9\uB825\uC774 5%\uB9CC\uD07C \uC99D\uAC00\uD569\uB2C8\uB2E4"
+  icon: {fileID: -1190951230, guid: 847f3e08157367e458aec63415b2d664, type: 3}
+  weight: 30
+  _value: 0.05

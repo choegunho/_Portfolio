@@ -6,7 +6,7 @@ public class PlayerAttack : MonoBehaviour
     private PlayerStateController _player;
     [SerializeField] private GameObject _attackEffect;
 
-    public float _damage => _player.Damage; 
+    public float _damage; 
 
     private bool _hashit;
 
@@ -27,6 +27,7 @@ public class PlayerAttack : MonoBehaviour
 
         if(other.TryGetComponent<GetDamage>(out var damaged))
         {
+            _damage = _player.SetDamage();
             if (_hashit) return;
             Vector3 hitPoint = other.ClosestPoint(transform.position);
             Instantiate(_attackEffect, hitPoint, Quaternion.identity);

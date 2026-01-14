@@ -359,7 +359,6 @@ public class Monster : MonoBehaviour, GetDamage
                 case State.Wander:
                     _nmAgent.isStopped = false;
                     _healthUI.DeActiveBar();
-                    Debug.Log("WanderState");
                     Wander();
                     break;
 

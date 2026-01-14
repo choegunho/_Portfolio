@@ -7,6 +7,6 @@ public class DamageUpAbility : AbilityData
 
     public override void Apply(PlayerStateController player)
     {
-        player.Damage += _value;
+        player.Damage += player.Damage * _value;
     }
 }

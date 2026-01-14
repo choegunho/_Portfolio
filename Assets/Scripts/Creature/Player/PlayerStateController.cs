@@ -25,12 +25,15 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     // 플레이어 스탯
     private float _health = 100.0f;
     private float _currentHealth;
-    private float _defend = 15.0f;
+    private float _defend = 5.0f;
     private float _damage = 10.0f;
     private float _moveSpeed = 2.5f;
     private int _level = 0;
-    private float _levelUpExperience = 100.0f;  // 레벨업 까지 필요한 경험치
+    private float _levelUpExperience = 80.0f;  // 레벨업 까지 필요한 경험치
     private float _experience = 0.0f;
+
+    private float _defendAttackCoolDown = 10.0f;
+    private float _lastDefendAttackTime;
 
     private float _healthIncrease = 1.3f;
     private float _damageIncrease = 1.2f;
@@ -41,6 +44,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private PlayerIdleState _idleState;
     private PlayerMoveState _moveState;
     private PlayerAttackState _attackState;
+    private PlayerDefendAttackState _defendAttackState;
     private PlayerDefendState _defendState;
     private PlayerDeadState _deadState;
     private CharacterController _characterController;
@@ -54,6 +58,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     public PlayerMoveState MoveState => _moveState;
 
     public PlayerAttackState AttackState => _attackState;
+
+    public PlayerDefendAttackState DefendAttackState => _defendAttackState;
 
     public PlayerDefendState DefendState => _defendState;
 
@@ -95,7 +101,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private void Awake()
     {
         _currentHealth = _health;
-        if(_animator == null)
+        if (_animator == null)
         {
             _animator = GetComponent<Animator>();
         }
@@ -106,6 +112,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _idleState = new PlayerIdleState(this);
         _moveState = new PlayerMoveState(this);
         _attackState = new PlayerAttackState(this);
+        _defendAttackState = new PlayerDefendAttackState(this);
         _defendState = new PlayerDefendState(this);
         _deadState = new PlayerDeadState(this);
         GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
@@ -114,8 +121,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
         _expUI = eb.GetComponent<ExpBar>();
         _expUI.Init(_levelUpExperience, this.transform);
+        _lastDefendAttackTime = -_defendAttackCoolDown;
     }
-
     private void Start()
     {
         _stateMachine.ChangeState(_idleState);
@@ -174,6 +181,27 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             _stateMachine.ChangeState(AttackState);
             _canAttack = false;
         }
+    }
+
+    public void DefendAttack()
+    {
+        _lastDefendAttackTime = Time.time;
+        _stateMachine.ChangeState(DefendAttackState);
+        _canAttack = false;
+    }
+
+    public bool CanDefendAttack()
+    {
+        return Time.time >= _lastDefendAttackTime + _defendAttackCoolDown;
+    }
+
+    public float SetDamage()
+    {
+        if(StateMachine.GetCurrentState() == _defendAttackState)
+        {
+            return _damage * 1.5f;
+        }
+        return _damage;
     }
 
     public void Defend()
@@ -260,6 +288,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _levelUpExperience += 30.0f;
 
         _health *= _healthIncrease;
+        _currentHealth *= _healthIncrease;
         _damage *= _damageIncrease;
 
         _healthUI.UpdateHealth(_health, _currentHealth);

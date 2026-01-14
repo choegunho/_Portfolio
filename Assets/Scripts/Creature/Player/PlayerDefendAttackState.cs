@@ -1,26 +1,25 @@
 using UnityEngine;
 
-public class PlayerAttackState : IState
+public class PlayerDefendAttackState : IState
 {
     private PlayerStateController _player;
 
-    public PlayerAttackState(PlayerStateController player)
+    public PlayerDefendAttackState(PlayerStateController player)
     {
         _player = player;
     }
-
     public void Enter()
     {
-        _player.Animator.SetTrigger("Attack");
+        _player.Animator.SetTrigger("DefendAttack");
     }
 
     public void Execute()
     {
-        if(_player.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack01") == true)
+        if (_player.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack02") == true)
         {
             float animTime = _player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
-            if(animTime >= 0.75f)    // 애니메이션이 끝났을 때
+            if (animTime >= 0.75f)    // 애니메이션이 끝났을 때
             {
                 Vector2 input = _player.GetMoveInput();
 
