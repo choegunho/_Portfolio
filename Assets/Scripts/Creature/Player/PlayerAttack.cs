@@ -27,10 +27,18 @@ public class PlayerAttack : MonoBehaviour
 
         if(other.TryGetComponent<GetDamage>(out var damaged))
         {
+            Debug.Log("hit");
             _damage = _player.SetDamage();
             if (_hashit) return;
+            bool isBoss = other.GetComponent<BossMonster>().CheckBoss();
+            Monster monster = other.GetComponent<Monster>();
+            if (isBoss)
+            {
+                _damage *= _player.BossDamage;
+            }
             Vector3 hitPoint = other.ClosestPoint(transform.position);
             Instantiate(_attackEffect, hitPoint, Quaternion.identity);
+            _player.AbilityHandler.OnHitMonster(monster);
             damaged.GetDamage(_damage);
             _hashit = true;
         }

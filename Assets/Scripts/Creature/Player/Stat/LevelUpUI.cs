@@ -9,6 +9,8 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private Transform _choiceParent;
     [SerializeField] private AbilityDatabase _abilityDatabase;
     [SerializeField] private PlayerStateController _player;
+    [SerializeField] private Text _levelUpText;
+    private AbilityHandler _abilityHandler;
 
     private List<ChoiceAbility> _abilities = new List<ChoiceAbility>();
     private List<AbilityData> _pool = new List<AbilityData>();
@@ -16,6 +18,7 @@ public class LevelUpUI : MonoBehaviour
     private void Awake()
     {
         _pool  = new List<AbilityData>(_abilityDatabase._abilities);
+        _abilityHandler = _player.GetComponent<AbilityHandler>();
     }
 
     public void Show()
@@ -34,11 +37,12 @@ public class LevelUpUI : MonoBehaviour
         }
 
         gameObject.SetActive(true);
+        _levelUpText.enabled = true;
     }
 
     private void OnSelect(AbilityData ability)
     {
-        ability.Apply(_player);
+        _abilityHandler.AddAbility(ability);
         Close();
     }
 
@@ -46,6 +50,7 @@ public class LevelUpUI : MonoBehaviour
     {
         Time.timeScale = 1f;
         gameObject.SetActive(false);
+        _levelUpText.enabled = false;
     }
 
     private void ClearCards()
@@ -68,6 +73,9 @@ public class LevelUpUI : MonoBehaviour
 
             if (ability == null)
                 break;
+
+            if (ability.unique && _abilityHandler.HasAbility(ability))
+                continue;
 
             result.Add(ability);
             pool.Remove(ability);

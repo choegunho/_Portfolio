@@ -12,5 +12,10 @@ public abstract class AbilityData : ScriptableObject
 
     public int weight;
 
-    public abstract void Apply(PlayerStateController player);
+    public bool unique = false;
+
+    public virtual void OnAcquire(PlayerStateController player) { }
+    public virtual void OnHit(PlayerStateController player, Monster target) { }
+    public virtual void OnKill(PlayerStateController player, Monster target) { }
+    public virtual void OnUpdate(PlayerStateController player) { }
 }

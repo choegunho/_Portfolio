@@ -5,7 +5,7 @@ public class DefendUpAbility : AbilityData
 {
     public float _value;
 
-    public override void Apply(PlayerStateController player)
+    public override void OnAcquire(PlayerStateController player)
     {
         player.Defense += (player.Defense * _value);
     }

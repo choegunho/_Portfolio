@@ -1,4 +1,6 @@
+using UnityEngine.UI;
 using JetBrains.Annotations;
+using System.Collections;
 using UnityEngine;
 
 public class EXPManager : MonoBehaviour
@@ -25,6 +27,12 @@ public class EXPManager : MonoBehaviour
 
     public void LevelUpUI()
     {
+        StartCoroutine(ShowLevelUpUI());
+    }
+
+    private IEnumerator ShowLevelUpUI()
+    {
+        yield return new WaitForSeconds(1.0f);
         levelUpUI.Show();
         GameObject obj = Instantiate(_levelUpPrefab,
                 _playerTransform.position + _offset,
@@ -44,5 +52,14 @@ public class EXPManager : MonoBehaviour
 
         EXPText text = obj.GetComponent<EXPText>();
         text.SetExp(exp);
+    }
+
+    private void Update()
+    {
+        // 테스트용: P 키로 증강 팝업 강제 오픈
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            StartCoroutine(ShowLevelUpUI());
+        }
     }
 }

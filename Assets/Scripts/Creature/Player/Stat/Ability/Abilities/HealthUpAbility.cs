@@ -5,7 +5,7 @@ public class HealthUpAbility : AbilityData
 {
     public float _value;
 
-    public override void Apply(PlayerStateController player)
+    public override void OnAcquire(PlayerStateController player)
     {
         player.Health += (player.Health * _value);
         player.UpdateUI();

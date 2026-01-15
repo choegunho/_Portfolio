@@ -47,7 +47,7 @@ public class MonsterSpawner : MonoBehaviour
                 if (boss != null)
                 {
                     Debug.Log("BossMonster Spawn!");
-                    boss.enabled = true;
+                    boss.IsBoss = true;
                     boss.Boss();
                 }
             }

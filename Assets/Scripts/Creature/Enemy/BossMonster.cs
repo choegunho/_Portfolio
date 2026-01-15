@@ -6,8 +6,21 @@ public class BossMonster : MonoBehaviour
     private float _healthMultiplier = 5.0f;
     private float _scaleMultiplier = 1.5f;
     private float _experienceMultiplier = 2.0f;
+    private bool _isBoss = false;
 
     private bool _applied = false;
+
+    public bool IsBoss
+    {
+        get { return _isBoss; }
+        set { _isBoss = value; }
+    }
+
+    public bool CheckBoss()
+    {
+        if (_isBoss) return true;
+        return false;
+    }
 
     public void Boss()
     {

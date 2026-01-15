@@ -13,6 +13,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private Transform worldCanvasTransform;
     [SerializeField] private GameObject _shieldEffect;
     [SerializeField] private LevelUpUI levelUpUI;
+    private AbilityHandler _abilityHandler;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
     private float yVelocity = 0f;
@@ -37,6 +38,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private float _healthIncrease = 1.3f;
     private float _damageIncrease = 1.2f;
+    private float _bossDamage = 1.0f;
 
     private Animator _animator;
 
@@ -66,6 +68,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     public PlayerDeadState DeadState => _deadState;
 
     public Animator Animator => _animator;
+    public AbilityHandler AbilityHandler => _abilityHandler;
 
     public float Health
     {
@@ -91,11 +94,16 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         set { _currentHealth = value; }
     }
 
-
     public float Speed
     {
         get { return _moveSpeed; }
         set { _moveSpeed = value; }
+    }
+
+    public float BossDamage
+    {
+        get { return _bossDamage; }
+        set { _bossDamage = value; }
     }
 
     private void Awake()
@@ -107,6 +115,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         }
 
         _characterController = GetComponent<CharacterController>();
+        _abilityHandler = GetComponent<AbilityHandler>();
 
         _stateMachine = new StateMachine();
         _idleState = new PlayerIdleState(this);
