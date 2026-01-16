@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 public class Monster : MonoBehaviour, GetDamage
 {
-    protected enum State
+    public enum State
     {
         Wander,
         Chase,
@@ -64,6 +64,11 @@ public class Monster : MonoBehaviour, GetDamage
     public float Damage
     {
         get { return _damage; }
+    }
+
+    public State CurrentState
+    {
+        get { return _currentState; }
     }
 
     protected virtual void Awake()
@@ -267,14 +272,19 @@ public class Monster : MonoBehaviour, GetDamage
 
         if(_isDead)
         {
+            PlayerStateController player;
             _deadCalled = true;
 
             _animator.SetTrigger("Dead");
 
             _collider.enabled = false;
 
-            _player.GetComponent<PlayerStateController>().GainExperience(_experience);
+            player = _player.GetComponent<PlayerStateController>();
+            player.GainExperience(_experience);
+            player.AbilityHandler.OnKillMonster(this);
             EXPManager.instance.ShowExpText(_experience);
+
+
 
             Invoke("DestroyMonster", 2.0f);
         }

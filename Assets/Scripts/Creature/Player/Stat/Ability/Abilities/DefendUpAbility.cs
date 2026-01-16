@@ -8,5 +8,6 @@ public class DefendUpAbility : AbilityData
     public override void OnAcquire(PlayerStateController player)
     {
         player.Defense += (player.Defense * _value);
+        Debug.Log($"currentDefend: {player.Defense}");
     }
 }

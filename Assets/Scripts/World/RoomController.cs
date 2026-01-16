@@ -1,3 +1,4 @@
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -19,6 +20,8 @@ public class RoomController : MonoBehaviour
     private bool _isEntered = false;
     private bool _isCleared = false;
 
+    private NavMeshSurface _navMeshSurface;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -35,6 +38,8 @@ public class RoomController : MonoBehaviour
         _monsterSpawner = GetComponentInChildren<MonsterSpawner>();
 
         _doors = GetComponentsInChildren<Doors>(true);
+
+        _navMeshSurface = GetComponent<NavMeshSurface>();
     }
 
     public void EnterRoom()
@@ -48,6 +53,7 @@ public class RoomController : MonoBehaviour
         _currentRoom = true;
         CloseDoors();
         ActivateRoom();
+        _navMeshSurface.enabled = true;
     }
 
     public void DecreaseMonster()
