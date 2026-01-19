@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using Unity.Multiplayer.Center.Common;
@@ -63,20 +63,22 @@ public class LevelUpUI : MonoBehaviour
 
     private List<AbilityData> GetRandomAbilities(List<AbilityData> abilities, int count)
     {
-        List<AbilityData> pool = new List<AbilityData>(abilities);
+        List<AbilityData> pool = new List<AbilityData>();
+
+        // 이미 가진 unique 제거
+        foreach (var a in abilities)
+        {
+            if (a.unique && _abilityHandler.HasAbility(a))
+                continue;
+
+            pool.Add(a);
+        }
 
         List<AbilityData> result = new List<AbilityData>();
 
-        for (int i = 0; i < count && pool.Count > 0; i++)
+        while (result.Count < count && pool.Count > 0)
         {
             AbilityData ability = GetRandomAbility(pool);
-
-            if (ability == null)
-                break;
-
-            if (ability.unique && _abilityHandler.HasAbility(ability))
-                continue;
-
             result.Add(ability);
             pool.Remove(ability);
         }

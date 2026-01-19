@@ -1,8 +1,9 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class PlayerAttackState : IState
 {
     private PlayerStateController _player;
+    private bool _isFinished;
 
     public PlayerAttackState(PlayerStateController player)
     {
@@ -11,32 +12,27 @@ public class PlayerAttackState : IState
 
     public void Enter()
     {
+        _isFinished = false;
         _player.Animator.SetTrigger("Attack");
     }
 
     public void Execute()
     {
-        if(_player.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack01") == true)
+        if (_isFinished)
+            return;
+
+        var stateInfo = _player.Animator.GetCurrentAnimatorStateInfo(0);
+
+        // Ïï†ÎãàÎ©îÏù¥ÏÖò ÎÅùÎÇòÎ©¥ ÏÉÅÌÉú Ï†ÑÌôò
+        if (stateInfo.IsName("Attack01") && stateInfo.normalizedTime >= 0.75f)
         {
-            float animTime = _player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            _isFinished = true;
 
-            if(animTime >= 0.75f)    // æ÷¥œ∏ﬁ¿Ãº«¿Ã ≥°≥µ¿ª ∂ß
-            {
-                Vector2 input = _player.GetMoveInput();
-
-                if (input.magnitude < 1.0f) // øÚ¡˜¿”¿Ã æ¯¿∏∏È
-                {
-                    _player.StateMachine.ChangeState(_player.IdleState);
-                }
-                else    // øÚ¡˜¿”¿Ã ¿÷¿∏∏È
-                {
-                    _player.StateMachine.ChangeState(_player.MoveState);
-                }
-            }
+            Vector2 input = _player.GetMoveInput();
+            if (input.magnitude < 0.1f)
+                _player.StateMachine.ChangeState(_player.IdleState);
             else
-            {
-                return;
-            }
+                _player.StateMachine.ChangeState(_player.MoveState);
         }
     }
 

@@ -29,6 +29,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float _defend = 5.0f;
     private float _damage = 10.0f;
     private float _moveSpeed = 2.5f;
+    private float _baseSpeed;
     private int _level = 0;
     private float _levelUpExperience = 80.0f;  // 레벨업 까지 필요한 경험치
     private float _experience = 0.0f;
@@ -36,9 +37,15 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float _defendAttackCoolDown = 10.0f;
     private float _lastDefendAttackTime;
 
+    private float _attackCoolDown = 0.75f;
+    private float _lastAttackTime;
+
     private float _healthIncrease = 1.3f;
     private float _damageIncrease = 1.2f;
     private float _bossDamage = 1.0f;
+
+    private float _speedBuffTime = 0.0f;
+    private float _speedMultiplier = 0.0f;
 
     private Animator _animator;
 
@@ -106,6 +113,12 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         set { _bossDamage = value; }
     }
 
+    public bool CanAttack
+    {
+        get { return _canAttack; }
+        set { _canAttack = value; }
+    }
+
     private void Awake()
     {
         _currentHealth = _health;
@@ -131,6 +144,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _expUI = eb.GetComponent<ExpBar>();
         _expUI.Init(_levelUpExperience, this.transform);
         _lastDefendAttackTime = -_defendAttackCoolDown;
+
+        _baseSpeed = _moveSpeed;
     }
     private void Start()
     {
@@ -180,15 +195,15 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private void AttackEnd()
     {
         _weapon.GetComponent<BoxCollider>().enabled = false;
-        _canAttack = true;
     }
 
     public void Attack()
     {
-        if (Input.GetMouseButtonDown(0) && _canAttack)
+        if (Input.GetMouseButtonDown(0) && CheckCanAttack())
         {
-            _stateMachine.ChangeState(AttackState);
             _canAttack = false;
+            _stateMachine.ChangeState(AttackState);
+            _lastAttackTime = Time.time;
         }
     }
 
@@ -202,6 +217,16 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     public bool CanDefendAttack()
     {
         return Time.time >= _lastDefendAttackTime + _defendAttackCoolDown;
+    }
+
+    public bool CheckCanAttack()
+    {
+        if(Time.time >= _lastAttackTime + _attackCoolDown)
+        {
+            _canAttack = true;
+            return _canAttack;
+        }
+        return false;
     }
 
     public float SetDamage()
@@ -305,6 +330,16 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         Debug.Log($"Level: {_level}");
     }
 
+    public void SpeedBuff(float speed)
+    {
+        float duration = 3f;
+
+        _speedMultiplier += _baseSpeed * speed;
+        _moveSpeed = _baseSpeed + _speedMultiplier;
+
+        _speedBuffTime = Time.time + duration;
+    }
+
     public void UpdateUI()
     {
         _healthUI.UpdateHealth(_health, _currentHealth);
@@ -320,6 +355,12 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         if (StateMachine.GetCurrentState() != _deadState)
         {
             MouseControll();
+        }
+
+        if (_speedMultiplier > 0.0f && Time.time >= _speedBuffTime)
+        {
+            _speedMultiplier = 0.0f;
+            _moveSpeed = _baseSpeed;
         }
 
         _stateMachine.Update();
