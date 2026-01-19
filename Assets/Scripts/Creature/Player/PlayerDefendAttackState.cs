@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerDefendAttackState : IState
 {
     private PlayerStateController _player;
+    private float _enterTime;
 
     public PlayerDefendAttackState(PlayerStateController player)
     {
@@ -10,32 +11,38 @@ public class PlayerDefendAttackState : IState
     }
     public void Enter()
     {
+        _enterTime = Time.time;
         _player.Animator.SetTrigger("DefendAttack");
     }
 
     public void Execute()
     {
-        if (_player.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack02") == true)
+        var animator = _player.Animator;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        // Normal path: wait until the DefendAttack animation finishes.
+        if (stateInfo.IsName("Attack02"))
         {
-            float animTime = _player.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            if (stateInfo.normalizedTime < 0.75f) return;
 
-            if (animTime >= 0.75f)    // 애니메이션이 끝났을 때
-            {
-                Vector2 input = _player.GetMoveInput();
-
-                if (input.magnitude < 1.0f) // 움직임이 없으면
-                {
-                    _player.StateMachine.ChangeState(_player.IdleState);
-                }
-                else    // 움직임이 있으면
-                {
-                    _player.StateMachine.ChangeState(_player.MoveState);
-                }
-            }
+            Vector2 input = _player.GetMoveInput();
+            if (input.magnitude < 0.1f)
+                _player.StateMachine.ChangeState(_player.IdleState);
             else
-            {
-                return;
-            }
+                _player.StateMachine.ChangeState(_player.MoveState);
+
+            return;
+        }
+
+        // Safety net: if we didn't enter Attack02 shortly after triggering, don't get stuck in this state.
+        // (Can happen if animator state name differs, transitions change, or trigger is consumed unexpectedly.)
+        if (Time.time - _enterTime >= 0.25f && !animator.IsInTransition(0))
+        {
+            Vector2 input = _player.GetMoveInput();
+            if (input.magnitude < 0.1f)
+                _player.StateMachine.ChangeState(_player.IdleState);
+            else
+                _player.StateMachine.ChangeState(_player.MoveState);
         }
     }
 

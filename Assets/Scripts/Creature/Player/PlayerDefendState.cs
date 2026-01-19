@@ -1,4 +1,3 @@
-using UnityEditorInternal;
 using UnityEngine;
 
 public class PlayerDefendState : IState
@@ -25,11 +24,11 @@ public class PlayerDefendState : IState
         {
             Vector2 input = _player.GetMoveInput();
 
-            if (input.magnitude < 1.0f) // ¿òÁ÷ÀÓÀÌ ¾øÀ¸¸é
+            if (input.magnitude < 1.0f) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             {
                 _player.StateMachine.ChangeState(_player.IdleState);
             }
-            else    // ¿òÁ÷ÀÓÀÌ ÀÖÀ¸¸é
+            else    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             {
                 _player.StateMachine.ChangeState(_player.MoveState);
             }

@@ -30,8 +30,17 @@ public class PlayerAttack : MonoBehaviour
             Debug.Log("hit");
             _damage = _player.SetDamage();
             if (_hashit) return;
-            bool isBoss = other.GetComponent<BossMonster>().CheckBoss();
+            
+            bool isBoss = false;
+            BossMonster bossMonster = other.GetComponent<BossMonster>();
+            if (bossMonster != null)
+            {
+                isBoss = bossMonster.CheckBoss();
+            }
+            
             Monster monster = other.GetComponent<Monster>();
+            if (monster == null) return;
+            
             if (isBoss)
             {
                 _damage *= _player.BossDamage;

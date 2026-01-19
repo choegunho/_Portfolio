@@ -16,4 +16,5 @@ MonoBehaviour:
   _description: "\uC774\uB3D9\uC18D\uB3C4\uAC00 4%\uB9CC\uD07C \uC99D\uAC00\uD569\uB2C8\uB2E4"
   icon: {fileID: 21300000, guid: 64ee88550a486c4459280848086ca4ed, type: 3}
   weight: 20
-  _value: 0.04
+  unique: 0
+  _value: 0.4
