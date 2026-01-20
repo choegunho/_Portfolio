@@ -40,8 +40,6 @@ public class Monster : MonoBehaviour, GetDamage
 
     private bool _hasHit = false;
 
-    private bool _isBoss = false;
-
     protected State _currentState = State.Wander;
 
     // 플레이어 위치

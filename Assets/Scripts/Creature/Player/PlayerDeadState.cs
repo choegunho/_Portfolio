@@ -13,7 +13,7 @@ public class PlayerDeadState : IState
         _player.Animator.SetTrigger("Dead");
         Debug.Log("Player is Dead");
 
-        
+        _player.MenuChangeCount();
     }
 
     public void Execute()

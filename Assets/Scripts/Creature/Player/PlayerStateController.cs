@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 using Unity.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerStateController : MonoBehaviour, GetDamage
 {
@@ -12,7 +14,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private GameObject _expBarPrefab;
     [SerializeField] private Transform worldCanvasTransform;
     [SerializeField] private GameObject _shieldEffect;
-    [SerializeField] private LevelUpUI levelUpUI;
+    [SerializeField] private GameObject _levelUpUI;
+    [SerializeField] private GameObject _gameOverUI;
     private AbilityHandler _abilityHandler;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
@@ -317,6 +320,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private void LevelUp()
     {
+        _levelUpUI.gameObject.SetActive(true);
         EXPManager.instance.LevelUpUI();
         _level++;
         _levelUpExperience += 30.0f;
@@ -343,6 +347,15 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     public void UpdateUI()
     {
         _healthUI.UpdateHealth(_health, _currentHealth);
+    }
+
+    public void MainMenuScene(){
+        Time.timeScale = 0f;
+        _gameOverUI.gameObject.SetActive(true);
+    }
+
+    public void MenuChangeCount(){
+        Invoke("MainMenuScene", 2.0f);
     }
 
     private void LateUpdate()

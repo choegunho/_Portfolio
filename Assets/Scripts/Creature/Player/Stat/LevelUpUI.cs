@@ -10,6 +10,7 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private AbilityDatabase _abilityDatabase;
     [SerializeField] private PlayerStateController _player;
     [SerializeField] private Text _levelUpText;
+    [SerializeField] private GameObject _levelUpUI;
     private AbilityHandler _abilityHandler;
 
     private List<ChoiceAbility> _abilities = new List<ChoiceAbility>();
@@ -43,6 +44,7 @@ public class LevelUpUI : MonoBehaviour
     private void OnSelect(AbilityData ability)
     {
         _abilityHandler.AddAbility(ability);
+        _levelUpUI.gameObject.SetActive(false);
         Close();
     }
 
