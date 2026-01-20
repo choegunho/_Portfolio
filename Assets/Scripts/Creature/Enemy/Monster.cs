@@ -112,7 +112,7 @@ public class Monster : MonoBehaviour, GetDamage
     public void IsBoss(float damageMultiplier, float healthMultiplier, float scaleMultiplier, float exeperienceMultiplier)
     {
         Debug.Log("Boss!!");
-        _chaseRange = 10.0f;
+        _chaseRange = 7.0f;
         _health *= healthMultiplier;
         _damage *= damageMultiplier;
         _experience *= exeperienceMultiplier;
