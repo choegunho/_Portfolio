@@ -8,6 +8,7 @@ public class HPControl : MonoBehaviour
     [SerializeField] private Image _healthFill;
     [SerializeField] private Text _healthText;
     [SerializeField] private Vector3 offset = new Vector3(0.0f, 3.0f, 0.0f);
+    private SkinnedMeshRenderer _targetRenderer;
 
     private Transform _target;
     private float _maxHealth;
@@ -17,6 +18,7 @@ public class HPControl : MonoBehaviour
     public void Init(float maxHealth, Transform target)
     {
         _target = target;
+        _targetRenderer = target.GetComponent<SkinnedMeshRenderer>();
         _maxHealth = maxHealth;
         _currentHealth = _maxHealth;
         _healthText.text = $"{(int)_currentHealth}/{(int)_maxHealth}";
@@ -65,7 +67,8 @@ public class HPControl : MonoBehaviour
 
     public void UpdateOffset(Vector3 transform)
     {
-        offset.y = transform.y + offset.y;
+        float height = _targetRenderer.bounds.size.y;
+        offset.y = height + offset.y;
     }
 
     private void LateUpdate()

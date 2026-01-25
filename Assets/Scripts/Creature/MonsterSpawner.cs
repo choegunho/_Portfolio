@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 public class MonsterSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject[] _monsterPrefabs;
+    [SerializeField] private List<GameObject> _monsterPrefabs;
     [SerializeField] private int _spawnCount = 8;
     private float _spawnRadius = 10.0f;
     private float _minDistanceBetweenMonsters = 1.2f;
@@ -37,7 +37,7 @@ public class MonsterSpawner : MonoBehaviour
 
             GameObject monsterPrefab = RandomMonster();
             GameObject monsterInstance =
-                Instantiate(monsterPrefab, spawnPos, Quaternion.identity, transform);
+Instantiate(monsterPrefab, spawnPos, Quaternion.identity, transform);
 
             spawnedPositions.Add(spawnPos);
 
@@ -65,7 +65,16 @@ public class MonsterSpawner : MonoBehaviour
 
     GameObject RandomMonster()
     {
-        GameObject monster = _monsterPrefabs[Random.Range(0, _monsterPrefabs.Length)];
+        GameObject monster;
+        if (_isBoss)
+        {
+            monster = _monsterPrefabs[Random.Range(0, _monsterPrefabs.Count)];
+            _monsterPrefabs.Remove(monster);
+        }
+        else
+        {
+            monster = _monsterPrefabs[Random.Range(0, _monsterPrefabs.Count)];
+        }
 
         return monster;
     }

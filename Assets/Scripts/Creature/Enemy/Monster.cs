@@ -22,7 +22,7 @@ public class Monster : MonoBehaviour, GetDamage
     private float _rotateSpeed = 5.0f;  // 회전속도
     protected float _attackCoolDown = 2.0f;   // 공격 쿨
     private float _attackTimer; // 공격시간
-    private Vector3 _baseScale;
+    protected Vector3 _baseScale;
 
     private float _wanderRange = 2.0f;  // 배회 범위
     private float _wanderInterval = 3.0f;   // 배회 간격
@@ -107,13 +107,13 @@ public class Monster : MonoBehaviour, GetDamage
     }
 
     // 보스 능력치 설정
-    public void IsBoss(float damageMultiplier, float healthMultiplier, float scaleMultiplier, float exeperienceMultiplier)
+    public virtual void IsBoss(float damageMultiplier, float healthMultiplier, float scaleMultiplier, float experienceMultiplier)
     {
         Debug.Log("Boss!!");
         _chaseRange = 7.0f;
         _health *= healthMultiplier;
         _damage *= damageMultiplier;
-        _experience *= exeperienceMultiplier;
+        _experience *= experienceMultiplier;
         transform.localScale = _baseScale * scaleMultiplier;
     }
 
@@ -216,7 +216,7 @@ public class Monster : MonoBehaviour, GetDamage
         }
     }
 
-    private void AttackDetect()
+    protected virtual void AttackDetect()
     {
         Vector3 center = transform.position + transform.forward * (_attackRange * 0.5f);
 

@@ -5,13 +5,14 @@ public class EnemyProjectile : MonoBehaviour
 
     private Vector3 _dir;
     public float _damage;
-    private float _speed = 5.0f;
+    private float _speed;
     private float _elapsedTime = 0.0f;
     private float _lapTime = 3.0f;
-    public void Init(float damage, Vector3 dir)
+    public void Init(float damage, Vector3 dir, float speed)
     {
         _damage = damage;
         _dir = dir;
+        _speed = speed;
     }
 
     private void OnTriggerEnter(Collider other)
