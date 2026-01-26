@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Skeleton : Monster
 {
+    private Vector3 _scale = new Vector3(0.5f, 0.5f, 0.5f);
     protected override void Awake()
     {
         _name = "Skeleton";
@@ -10,5 +11,10 @@ public class Skeleton : Monster
         _experience = 35.0f;
 
         base.Awake();
+    }
+
+    public override void ResetScale()
+    {
+        transform.localScale = _scale;
     }
 }

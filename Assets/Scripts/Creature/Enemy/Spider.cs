@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Spider : Monster
 {
+    private Vector3 _scale = new Vector3(0.2f, 0.2f, 0.2f);
     protected override void Awake()
     {
         _name = "Spider";
@@ -11,5 +12,10 @@ public class Spider : Monster
         _experience = 30.0f;
 
         base.Awake();
+    }
+
+    public override void ResetScale()
+    {
+        transform.localScale = _scale;
     }
 }

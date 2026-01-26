@@ -117,7 +117,7 @@ public class Monster : MonoBehaviour, GetDamage
         transform.localScale = _baseScale * scaleMultiplier;
     }
 
-    public void ResetScale()
+    public virtual void ResetScale()
     {
         transform.localScale = Vector3.one;
     }

@@ -4,7 +4,7 @@ public class BossMonster : MonoBehaviour
 {
     private float _damageMultiplier = 3.0f;
     private float _healthMultiplier = 5.0f;
-    private float _scaleMultiplier = 1.5f;
+    private float _scaleMultiplier = 1.4f;
     private float _experienceMultiplier = 2.5f;
     private bool _isBoss = false;
 
