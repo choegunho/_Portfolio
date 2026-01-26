@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ChestMonster : Monster
 {
+    private Vector3 _scale = new Vector3(0.5f, 0.5f, 0.5f);
     protected override void Awake()
     {
         _name = "Mimic";
@@ -10,6 +12,12 @@ public class ChestMonster : Monster
 
         base.Awake();
     }
+
+    public override void ResetScale()
+    {
+        transform.localScale = _scale;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected override void Start()
     {

@@ -4,15 +4,17 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LevelUp/Ability")]
 public abstract class AbilityData : ScriptableObject
 {
-    public string _abilityName;
+    public string abilityName;
 
-    public string _description;
+    public string description;
 
     public Sprite icon;
 
     public int weight;
 
     public bool unique = false;
+
+    public bool stat = true;
 
     public virtual void OnAcquire(PlayerStateController player) { }
     public virtual void OnHit(PlayerStateController player, Monster target) { }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AbilityHandler : MonoBehaviour
 {
-    private List<AbilityData> abilities = new();
+    public List<AbilityData> _abilities = new();
     private PlayerStateController _player;
 
     private void Awake()
@@ -13,9 +13,19 @@ public class AbilityHandler : MonoBehaviour
         _player = GetComponent<PlayerStateController>();
     }
 
+    private void Start()
+    {
+        GameManager.Instance.RegisterAbilityHandler(this);
+    }
+
+    public List<AbilityData> GetAbilities()
+    {
+        return _abilities;
+    }
+
     private void Update()
     {
-        foreach(var ability in abilities)
+        foreach(var ability in _abilities)
         {
             ability.OnUpdate(_player);
         }
@@ -23,18 +33,18 @@ public class AbilityHandler : MonoBehaviour
 
     public bool HasAbility(AbilityData ability)
     {
-        return abilities.Contains(ability);
+        return _abilities.Contains(ability);
     }
 
     public void AddAbility(AbilityData ability)
     {
-        abilities.Add(ability);
+        _abilities.Add(ability);
         ability.OnAcquire(_player);
     }
 
     public void OnHitMonster(Monster monster)
     {
-        foreach(var ability in abilities)
+        foreach(var ability in _abilities)
         {
             ability.OnHit(_player, monster);
         }
@@ -42,7 +52,7 @@ public class AbilityHandler : MonoBehaviour
 
     public void OnKillMonster(Monster monster)
     {
-        foreach(var ability in abilities)
+        foreach(var ability in _abilities)
         {
             ability.OnKill(_player, monster);
         }

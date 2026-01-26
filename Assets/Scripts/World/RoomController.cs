@@ -42,6 +42,14 @@ public class RoomController : MonoBehaviour
         _navMeshSurface = GetComponent<NavMeshSurface>();
     }
 
+    private void Start()
+    {
+        if(_roomType == RoomType.Boss)
+        {
+            GameManager.Instance.RegisterRoomController(this);
+        }
+    }
+
     public void EnterRoom()
     {
         if (_isEntered) return;

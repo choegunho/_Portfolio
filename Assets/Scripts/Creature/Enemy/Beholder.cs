@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Beholder : Monster
 {
     [SerializeField] private GameObject _projectilePref;
     [SerializeField] private Transform _firePoint;
     private float _projectileSpeed = 5.0f;
+    private Vector3 _scale = new Vector3(0.5f, 0.5f, 0.5f);
 
     protected override void Awake()
     {
@@ -17,6 +19,11 @@ public class Beholder : Monster
         _attackRange = 3.0f;
 
         base.Awake();
+    }
+
+    public override void ResetScale()
+    {
+        transform.localScale = _scale;
     }
 
     // 보스 능력치 설정

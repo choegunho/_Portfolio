@@ -27,7 +27,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     Vector3 camOffset = new Vector3(0.0f, 5.0f, -2.5f);
 
     // 플레이어 스탯
-    private float _health = 100.0f;
+    private float _maxHealth = 100.0f;
     private float _currentHealth;
     private float _defend = 5.0f;
     private float _damage = 10.0f;
@@ -62,6 +62,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private CharacterController _characterController;
     private HPControl _healthUI;
     private ExpBar _expUI;
+    private PlayerStat _playerStat;
 
     public StateMachine StateMachine => _stateMachine;
 
@@ -82,8 +83,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public float Health
     {
-        get { return _health; }
-        set { _health = value; }
+        get { return _maxHealth; }
+        set { _maxHealth = value; }
     }
 
     public float Damage
@@ -110,6 +111,24 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         set { _moveSpeed = value; }
     }
 
+    public int Level
+    {
+        get { return _level; }
+        set { _level = value; }
+    }
+
+    public float LevelUpExperience
+    {
+        get { return _levelUpExperience; }
+        set { _levelUpExperience = value; }
+    }
+
+    public float Experience
+    {
+        get { return _experience; }
+        set { _experience = value; }
+    }
+
     public float BossDamage
     {
         get { return _bossDamage; }
@@ -124,7 +143,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private void Awake()
     {
-        _currentHealth = _health;
+        _currentHealth = _maxHealth;
         if (_animator == null)
         {
             _animator = GetComponent<Animator>();
@@ -140,12 +159,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _defendAttackState = new PlayerDefendAttackState(this);
         _defendState = new PlayerDefendState(this);
         _deadState = new PlayerDeadState(this);
-        GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
-        _healthUI = hb.GetComponent<HPControl>();
-        _healthUI.Init(_health, this.transform);
-        GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
-        _expUI = eb.GetComponent<ExpBar>();
-        _expUI.Init(_levelUpExperience, this.transform);
+        _playerStat = GetComponent<PlayerStat>();
         _lastDefendAttackTime = -_defendAttackCoolDown;
 
         _baseSpeed = _moveSpeed;
@@ -153,6 +167,17 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private void Start()
     {
         _stateMachine.ChangeState(_idleState);
+        GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
+        _healthUI = hb.GetComponent<HPControl>();
+        _healthUI.Init(_maxHealth, this.transform);
+        GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
+        _expUI = eb.GetComponent<ExpBar>();
+        _expUI.Init(_levelUpExperience, this.transform);
+        GameManager.Instance.RegisterPlayer(this);
+
+        var data = GameManager.Instance;
+
+        data.ApplyStat();
     }
 
     /// <summary>
@@ -264,14 +289,14 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             _currentHealth -= damage;
             _healthUI.TakeDamage(damage);
             Debug.Log("Defend Success");
-            Debug.Log($"{_health}");
+            Debug.Log($"{_maxHealth}");
         }
         else
         {
             if (_stateMachine.GetCurrentState() == _deadState) return;
             _currentHealth -= damage;
             _healthUI.TakeDamage(damage);
-            Debug.Log($"{_health}");
+            Debug.Log($"{_maxHealth}");
         }
     }
 
@@ -325,13 +350,14 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _level++;
         _levelUpExperience += 30.0f;
 
-        _health *= _healthIncrease;
+        _maxHealth *= _healthIncrease;
         _currentHealth *= _healthIncrease;
         _damage *= _damageIncrease;
 
-        _healthUI.UpdateHealth(_health, _currentHealth);
+        _healthUI.UpdateHealth(_maxHealth, _currentHealth);
         Debug.Log("Level Up!");
         Debug.Log($"Level: {_level}");
+        _playerStat.SaveStat();
     }
 
     public void SpeedBuff(float speed)
@@ -346,7 +372,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public void UpdateUI()
     {
-        _healthUI.UpdateHealth(_health, _currentHealth);
+        _healthUI.UpdateHealth(_maxHealth, _currentHealth);
     }
 
     public void MainMenuScene(){
