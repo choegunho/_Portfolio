@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a607fd092bbb57449aaf581d2ecf064, type: 3}
   m_Name: HealthUp1
   m_EditorClassIdentifier: 
-  _abilityName: "\uCD5C\uB300\uCCB4\uB825 \uC99D\uAC00"
-  _description: "\uCD5C\uB300\uCCB4\uB825\uC774 10% \uC99D\uAC00\uD569\uB2C8\uB2E4"
+  abilityName: "\uCD5C\uB300 \uC0DD\uBA85\uB825 \uC99D\uAC00"
+  description: "\uCD5C\uB300 \uC0DD\uBA85\uB825\uC774 1% \uC99D\uAC00\uD569\uB2C8\uB2E4."
   icon: {fileID: -690369022, guid: 847f3e08157367e458aec63415b2d664, type: 3}
   weight: 70
+  unique: 0
+  stat: 1
   _value: 0.1

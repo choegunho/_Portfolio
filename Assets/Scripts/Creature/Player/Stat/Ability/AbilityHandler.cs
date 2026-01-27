@@ -13,11 +13,6 @@ public class AbilityHandler : MonoBehaviour
         _player = GetComponent<PlayerStateController>();
     }
 
-    private void Start()
-    {
-        GameManager.Instance.RegisterAbilityHandler(this);
-    }
-
     public List<AbilityData> GetAbilities()
     {
         return _abilities;

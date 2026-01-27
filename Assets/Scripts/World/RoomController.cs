@@ -98,6 +98,10 @@ public class RoomController : MonoBehaviour
 
         if(_currentMonster == 0)
         {
+            if( _roomType == RoomType.Boss)
+            {
+                GameManager.Instance.ClearStage();
+            }
             _isCleared = true;
             OpenDoors();
             _currentRoom = false;

@@ -11,7 +11,10 @@ public class GameOver : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         Time.timeScale = 1.0f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        string currentStage = GameManager.Instance.CurrentStage;
+
+        // Stage Àç·Îµå
+        GameManager.Instance.RequestLoadStage(currentStage);
     }
 
     public void OnClickMainMenuButton()

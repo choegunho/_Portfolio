@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc847036e1956d44ad2553b1804b3b1, type: 3}
   m_Name: BloodSucking
   m_EditorClassIdentifier: 
-  _abilityName: "\uD761\uD608"
-  _description: "\uBAAC\uC2A4\uD130\uB97C \uCC98\uCE58\uD558\uBA74 \uCCB4\uB825\uC744
-    8\uB9CC\uD07C \uD68C\uBCF5\uD569\uB2C8\uB2E4"
+  abilityName: "\uC0DD\uBA85\uB825 \uD761\uC218 "
+  description: "\uBAAC\uC2A4\uD130 \uCC98\uCE58\uC2DC \uC0DD\uBA85\uB825\uC744 \uD68C\uBCF5\uD569\uB2C8\uB2E4."
   icon: {fileID: 21300000, guid: 0c04a93b6f9a925458e5d3069dfda045, type: 3}
   weight: 10
   unique: 1

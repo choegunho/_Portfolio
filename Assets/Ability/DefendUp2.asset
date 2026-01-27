@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fe4f04de7ed0214f9c95977dde4ee3d, type: 3}
   m_Name: DefendUp2
   m_EditorClassIdentifier: 
-  _abilityName: "\uBC29\uC5B4\uB825 \uC99D\uAC00"
-  _description: "\uBC29\uC5B4\uB825\uC774 5%\uB9CC\uD07C \uC99D\uAC00\uD569\uB2C8\uB2E4"
+  abilityName: "\uBC29\uC5B4\uB825 \uC99D\uAC00"
+  description: "\uBC29\uC5B4\uB825\uC774 5% \uC99D\uAC00\uD569\uB2C8\uB2E4."
   icon: {fileID: -604943165, guid: 847f3e08157367e458aec63415b2d664, type: 3}
   weight: 20
+  unique: 0
+  stat: 1
   _value: 0.5

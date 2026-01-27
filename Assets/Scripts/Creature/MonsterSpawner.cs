@@ -8,8 +8,8 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] private int _spawnCount = 8;
     private float _spawnRadius = 10.0f;
     private float _minDistanceBetweenMonsters = 1.2f;
-    private float minDistanceFromPlayer = 5.0f;
-    [SerializeField] private Transform player;
+    private float _minDistanceFromPlayer = 5.0f;
+    private Transform _player;
     private bool _isBoss = false;
     private BossMonster _boss;
 
@@ -21,6 +21,11 @@ public class MonsterSpawner : MonoBehaviour
     private List<Vector3> spawnedPositions = new List<Vector3>();
 
     public int SpawnCount { get { return _spawnCount; } }
+
+    private void Awake()
+    {
+        _player = GameManager.Instance.PlayerTransform;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -90,8 +95,8 @@ Instantiate(monsterPrefab, spawnPos, Quaternion.identity, transform);
 
             if(NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))
             {
-                if (player != null &&
-                    Vector3.Distance(hit.position, player.position) < minDistanceFromPlayer)
+                if (_player != null &&
+                    Vector3.Distance(hit.position, _player.position) < _minDistanceFromPlayer)
                 {
                     continue;
                 }

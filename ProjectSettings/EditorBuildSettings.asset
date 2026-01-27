@@ -12,8 +12,14 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: bf87a97b124f1034982b09eb41a37e1b
   - enabled: 1
+    path: Assets/Scenes/Persistent Scene.unity
+    guid: f60cd30f926cff1458ae7410acc1e454
+  - enabled: 1
     path: Assets/Scenes/Stage1.unity
     guid: 1c4a06bbb7edcb042b1c2f3a18d86394
+  - enabled: 1
+    path: Assets/Scenes/Stage2.unity
+    guid: d6acbddf1ce9af541a3058fc5053dd9e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

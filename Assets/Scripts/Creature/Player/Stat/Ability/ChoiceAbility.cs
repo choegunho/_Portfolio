@@ -25,8 +25,8 @@ public class ChoiceAbility : MonoBehaviour
         _ability = ability;
         _onSelect = select;
 
-        _nameText.text = _ability._abilityName;
-        _descriptionText.text = _ability._description;
+        _nameText.text = _ability.abilityName;
+        _descriptionText.text = _ability.description;
         _icon.sprite = _ability.icon;
     }
 

@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2620c2f753341b49aa746f2eb3f7d88, type: 3}
   m_Name: Heal1
   m_EditorClassIdentifier: 
-  _abilityName: "\uCCB4\uB825 \uD68C\uBCF5"
-  _description: "\uCCB4\uB825\uC744 30% \uD68C\uBCF5\uD569\uB2C8\uB2E4"
+  abilityName: "\uC0DD\uBA85\uB825 \uD68C\uBCF5"
+  description: "\uC0DD\uBA85\uB825\uC774 3% \uD68C\uBCF5\uD569\uB2C8\uB2E4."
   icon: {fileID: -159757665, guid: 847f3e08157367e458aec63415b2d664, type: 3}
   weight: 70
+  unique: 0
+  stat: 1
   _value: 0.3

@@ -62,7 +62,6 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private CharacterController _characterController;
     private HPControl _healthUI;
     private ExpBar _expUI;
-    private PlayerStat _playerStat;
 
     public StateMachine StateMachine => _stateMachine;
 
@@ -159,7 +158,6 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _defendAttackState = new PlayerDefendAttackState(this);
         _defendState = new PlayerDefendState(this);
         _deadState = new PlayerDeadState(this);
-        _playerStat = GetComponent<PlayerStat>();
         _lastDefendAttackTime = -_defendAttackCoolDown;
 
         _baseSpeed = _moveSpeed;
@@ -173,11 +171,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
         _expUI = eb.GetComponent<ExpBar>();
         _expUI.Init(_levelUpExperience, this.transform);
-        GameManager.Instance.RegisterPlayer(this);
 
         var data = GameManager.Instance;
-
-        data.ApplyStat();
     }
 
     /// <summary>
@@ -357,7 +352,6 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _healthUI.UpdateHealth(_maxHealth, _currentHealth);
         Debug.Log("Level Up!");
         Debug.Log($"Level: {_level}");
-        _playerStat.SaveStat();
     }
 
     public void SpeedBuff(float speed)
@@ -403,5 +397,11 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         }
 
         _stateMachine.Update();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            _damage += 100.0f;
+            _moveSpeed += 6.0f;
+        }
     }
 }

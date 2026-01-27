@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class WallTransparencyController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform target;      // 캐릭터
-    [SerializeField] private Camera mainCamera;
+    private Transform target;      // 캐릭터
+    private Camera mainCamera;
 
     [Header("Materials")]
     [SerializeField] private Material opaqueMaterial;       // URP/Lit
@@ -18,6 +18,12 @@ public class WallTransparencyController : MonoBehaviour
     // 현재 프레임에 가려진 Renderer
     private readonly HashSet<Renderer> currentHits = new();
     private readonly HashSet<Renderer> previousHits = new();
+
+    private void Awake()
+    {
+        target = GameManager.Instance.PlayerTransform;
+        mainCamera = GameManager.Instance.Camera;
+    }
 
     void Start()
     {

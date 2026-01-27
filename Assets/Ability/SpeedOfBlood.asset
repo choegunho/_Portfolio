@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74464a21644ce2a419192788a8536385, type: 3}
   m_Name: SpeedOfBlood
   m_EditorClassIdentifier: 
-  _abilityName: "\uD53C\uC758 \uC9C8\uC8FC"
-  _description: "\uBAAC\uC2A4\uD130\uB97C \uC7A1\uC73C\uBA74 3\uCD08\uB3D9\uC548
-    \uC774\uB3D9\uC18D\uB3C4\uAC00 1% \uC99D\uAC00\uD569\uB2C8\uB2E4(\uC911\uCCA9\uAC00\uB2A5)"
+  abilityName: "\uD53C\uC758 \uC9C8\uC8FC"
+  description: "\uBAAC\uC2A4\uD130\uB97C \uC8FD\uC77C\uB54C\uB9C8\uB2E4 3\uCD08\uB3D9\uC548
+    1%\uC99D\uAC00\uD569\uB2C8\uB2E4.(\uC911\uCCA9 \uAC00\uB2A5)"
   icon: {fileID: 21300000, guid: 98073ed092a15174289a88b9c1615868, type: 3}
   weight: 40
   unique: 1

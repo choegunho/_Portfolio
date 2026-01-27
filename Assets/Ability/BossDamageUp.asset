@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8142a00ddfc418445ab25762a9383be1, type: 3}
   m_Name: BossDamageUp
   m_EditorClassIdentifier: 
-  _abilityName: "\uACF5\uACA9\uB825 \uC99D\uAC00(\uBCF4\uC2A4)"
-  _description: "\uBCF4\uC2A4 \uC0C1\uB300\uB85C \uACF5\uACA9\uB825\uC774 6% \uC99D\uAC00\uD569\uB2C8\uB2E4"
+  abilityName: "\uBCF4\uC2A4 \uACF5\uACA9\uB825 \uC99D\uAC00"
+  description: "\uBCF4\uC2A4 \uBAAC\uC2A4\uD130 \uC0C1\uB300\uB85C \uACF5\uACA9\uB825\uC774
+    6% \uC99D\uAC00\uD569\uB2C8\uB2E4."
   icon: {fileID: 21300000, guid: 86d131c8c30df0548bbb7f499acad202, type: 3}
   weight: 50
+  unique: 0
+  stat: 1
   _value: 0.6

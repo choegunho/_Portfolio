@@ -9,7 +9,8 @@ public class MainMenu : MonoBehaviour
 
     public void OnStartButton()
     {
-        SceneManager.LoadScene("Stage1");
+        this.gameObject.SetActive(false);
+        GameManager.Instance.StartGame();
     }
 
     public void OnExitButton()
