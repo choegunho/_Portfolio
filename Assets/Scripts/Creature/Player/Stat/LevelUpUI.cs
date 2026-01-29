@@ -51,7 +51,7 @@ public class LevelUpUI : MonoBehaviour
     private void Close()
     {
         Time.timeScale = 1f;
-        gameObject.SetActive(false);
+        _levelUpUI.gameObject.SetActive(false);
         _levelUpText.enabled = false;
     }
 

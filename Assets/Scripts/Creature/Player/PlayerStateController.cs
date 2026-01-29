@@ -177,6 +177,32 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         var data = GameManager.Instance;
     }
 
+    public void ResetPlayer()
+    {
+        _stateMachine.ChangeState(IdleState);
+        _animator.ResetTrigger("Dead");
+        _animator.Play("Idle_Battle", 0, 0f); // 강제로 Idle 상태로 전환
+        _maxHealth = 100.0f;
+        _currentHealth = _maxHealth; 
+        _defend = 5.0f;
+        _damage = 10.0f;
+        _moveSpeed = 2.5f;
+
+        _level = 0;
+        _levelUpExperience = 80.0f;
+        _experience = 0.0f;
+        _bossDamage = 0.0f;
+        GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
+        _healthUI = hb.GetComponent<HPControl>();
+        _healthUI.Init(_maxHealth, this.transform);
+
+        GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
+        _expUI = eb.GetComponent<ExpBar>();
+        _expUI.Init(_levelUpExperience, this.transform);
+
+        _abilityHandler.ResetAbilities();
+    }
+
     /// <summary>
     /// 키보드 입력을 받아옴
     /// </summary>
@@ -329,6 +355,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public void GainExperience(float amount)
     {
+        if(_stateMachine.GetCurrentState() == _deadState) return;
+
         Debug.Log($"Get {amount}exp");
         _experience += amount;
 
@@ -383,6 +411,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     }
 
     public void MainMenuScene(){
+        Debug.Log("GameOver");
         Time.timeScale = 0f;
         _gameOverUI.gameObject.SetActive(true);
     }
@@ -414,6 +443,11 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         if (Input.GetKeyDown(KeyCode.P))
         {
             LevelUp();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GetDamage(9999.9f);
         }
     }
 }

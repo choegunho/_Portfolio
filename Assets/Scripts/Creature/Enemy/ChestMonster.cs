@@ -7,8 +7,9 @@ public class ChestMonster : Monster
     protected override void Awake()
     {
         _name = "Mimic";
-        _health = 70.0f;
-        _damage = 20.0f;
+        _health = 700.0f;
+        _damage = 25.0f;
+        _experience = 40.0f;
 
         base.Awake();
     }

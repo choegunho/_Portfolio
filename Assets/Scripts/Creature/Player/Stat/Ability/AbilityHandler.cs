@@ -52,4 +52,9 @@ public class AbilityHandler : MonoBehaviour
             ability.OnKill(_player, monster);
         }
     }
+
+    public void ResetAbilities()
+    {
+        _abilities.Clear();
+    }
 }

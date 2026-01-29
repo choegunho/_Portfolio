@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     private RoomController _roomController;
     [SerializeField] private Transform _player;
     [SerializeField] private Camera _camera;
+    [SerializeField] private GameObject _mainMenu;
     private string _currentStage;
     private Transform _spawnPoint;
 
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(_currentStage))
         {
-            RequestLoadStage("Stage3");
+            RequestLoadStage("Stage1");
         }
     }
 
@@ -76,6 +77,13 @@ public class GameManager : MonoBehaviour
         string nextStage = $"Stage{num + 1}";
 
         RequestLoadStage(nextStage);
+    }
+
+    public void MainMenu()
+    {
+        _mainMenu.gameObject.SetActive(true);
+        _currentStage = null;
+        _player.GetComponent<PlayerStateController>().ResetPlayer();
     }
 
     public IEnumerator LoadStage(string stage)
