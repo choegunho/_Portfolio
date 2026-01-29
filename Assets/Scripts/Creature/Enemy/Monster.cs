@@ -58,6 +58,12 @@ public class Monster : MonoBehaviour, GetDamage
     private CapsuleCollider _collider;
     protected HPControl _healthUI;
     private RoomController _roomController;
+    private EliteMonsterOutline _outline;
+
+    public string Name
+    {
+        get { return _name; }
+    }
 
     public float Damage
     {
@@ -76,6 +82,7 @@ public class Monster : MonoBehaviour, GetDamage
         _animator = GetComponent<Animator>();
         _collider = GetComponent<CapsuleCollider>();
         _roomController = GetComponentInParent<RoomController>();
+        _outline = FindAnyObjectByType<EliteMonsterOutline>();
 
         _nmAgent.speed = 1.5f;
         _nmAgent.updateRotation = true;
@@ -115,6 +122,13 @@ public class Monster : MonoBehaviour, GetDamage
         _damage *= damageMultiplier;
         _experience *= experienceMultiplier;
         transform.localScale = _baseScale * scaleMultiplier;
+    }
+
+    public virtual void EliteMonster()
+    {
+        _health *= 2.0f;
+        _damage *= 1.2f;
+        _outline.Activate();
     }
 
     public virtual void ResetScale()

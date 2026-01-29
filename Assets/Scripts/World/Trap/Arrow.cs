@@ -18,17 +18,14 @@ public class Arrow : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+        else if(other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     private void Update()
     {
-        _time += Time.deltaTime;
-
         transform.position += -transform.forward * Time.deltaTime * _moveSpeed;
-
-        if (_time >= _laptime)
-        {
-            Destroy(this.gameObject);
-        }
     }
 }

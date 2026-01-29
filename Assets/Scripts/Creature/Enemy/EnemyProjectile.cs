@@ -23,6 +23,10 @@ public class EnemyProjectile : MonoBehaviour
             damage.GetDamage(_damage);
             Destroy(this.gameObject);
         }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     // Update is called once per frame

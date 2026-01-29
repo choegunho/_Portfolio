@@ -7,6 +7,7 @@ public class SpeedUpAbility : AbilityData
 
     public override void OnAcquire(PlayerStateController player)
     {
-        player.Speed += player.Speed * _value;
+        float IncreasedSpeed = player.Speed * _value;
+        player.IncreaseBaseSpeed(IncreasedSpeed);
     }
 }

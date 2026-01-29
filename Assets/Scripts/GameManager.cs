@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(_currentStage))
         {
-            RequestLoadStage("Stage1");
+            RequestLoadStage("Stage3");
         }
     }
 

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -42,7 +43,12 @@ public class MonsterSpawner : MonoBehaviour
 
             GameObject monsterPrefab = RandomMonster();
             GameObject monsterInstance =
-Instantiate(monsterPrefab, spawnPos, Quaternion.identity, transform);
+                Instantiate(monsterPrefab, spawnPos, Quaternion.identity, transform);
+            if(GameManager.Instance.CurrentStage == "Stage3" && 
+                (monsterInstance.GetComponent<Monster>().Name == "Beholder"))
+            {
+                monsterInstance.GetComponent<Monster>().EliteMonster();
+            }
 
             spawnedPositions.Add(spawnPos);
 
@@ -66,7 +72,6 @@ Instantiate(monsterPrefab, spawnPos, Quaternion.identity, transform);
             }
         }
     }
-
 
     GameObject RandomMonster()
     {

@@ -49,6 +49,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private float _speedBuffTime = 0.0f;
     private float _speedMultiplier = 0.0f;
+    private float _tempSpeedBonus;     // 일시적 버프
+
 
     private Animator _animator;
 
@@ -353,16 +355,27 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         Debug.Log("Level Up!");
         Debug.Log($"Level: {_level}");
     }
-
     public void SpeedBuff(float speed)
     {
         float duration = 3f;
 
-        _speedMultiplier += _baseSpeed * speed;
-        _moveSpeed = _baseSpeed + _speedMultiplier;
+        _tempSpeedBonus += speed;
+        UpdateMoveSpeed();
 
         _speedBuffTime = Time.time + duration;
     }
+
+    private void UpdateMoveSpeed()
+    {
+        _moveSpeed = _baseSpeed + _tempSpeedBonus;
+        Debug.Log($"Speed: {_moveSpeed}");
+    }
+    public void IncreaseBaseSpeed(float value)
+    {
+        _baseSpeed += value;
+        UpdateMoveSpeed();
+    }
+
 
     public void UpdateUI()
     {
@@ -390,18 +403,17 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             MouseControll();
         }
 
-        if (_speedMultiplier > 0.0f && Time.time >= _speedBuffTime)
+        if (_tempSpeedBonus > 0.0f && Time.time >= _speedBuffTime)
         {
-            _speedMultiplier = 0.0f;
-            _moveSpeed = _baseSpeed;
+            _tempSpeedBonus = 0.0f;
+            UpdateMoveSpeed();
         }
 
         _stateMachine.Update();
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            _damage += 100.0f;
-            _moveSpeed += 6.0f;
+            LevelUp();
         }
     }
 }
