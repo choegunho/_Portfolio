@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Unity.Multiplayer.Center.Common;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelUpUI : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private Text _levelUpText;
     [SerializeField] private GameObject _levelUpUI;
     private AbilityHandler _abilityHandler;
+    private bool _cardInputEnabled;
 
     private List<ChoiceAbility> _abilities = new List<ChoiceAbility>();
     private List<AbilityData> _pool = new List<AbilityData>();
@@ -37,15 +39,23 @@ public class LevelUpUI : MonoBehaviour
             _abilities.Add(choice);
         }
 
-        gameObject.SetActive(true);
+        _levelUpUI.SetActive(true);
         _levelUpText.enabled = true;
+        StartCoroutine(EnableCardInput());
     }
 
     private void OnSelect(AbilityData ability)
     {
+        if (!_cardInputEnabled) return;
         _abilityHandler.AddAbility(ability);
-        _levelUpUI.gameObject.SetActive(false);
         Close();
+    }
+
+    IEnumerator EnableCardInput()
+    {
+        _cardInputEnabled = false;
+        yield return new WaitForSecondsRealtime(0.5f);
+        _cardInputEnabled = true;
     }
 
     private void Close()

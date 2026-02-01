@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         GameManager.Instance.StartGame();
+        GameManager.Instance.ActivateUI();
     }
 
     public void OnExitButton()

@@ -11,13 +11,14 @@ public class GameOver : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         Time.timeScale = 1.0f;
-        GameManager.Instance.PlayerTransform.GetComponent<PlayerStateController>().ResetPlayer();
         // Stage Àç·Îµå
         GameManager.Instance.RequestLoadStage("Stage1");
+        GameManager.Instance.ActivateUI();
     }
 
     public void OnClickMainMenuButton()
     {
+        Time.timeScale = 1.0f;
         this.gameObject.SetActive(false);
         GameManager.Instance.MainMenu();
     }

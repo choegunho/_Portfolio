@@ -46,12 +46,4 @@ public class EXPManager : MonoBehaviour
         EXPText text = obj.GetComponent<EXPText>();
         text.SetExp(exp);
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            StartCoroutine(ShowLevelUpUI());
-        }
-    }
 }

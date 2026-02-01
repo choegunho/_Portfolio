@@ -1,9 +1,11 @@
 ﻿using System;
-using Unity.VisualScripting;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.UI;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class PlayerStateController : MonoBehaviour, GetDamage
@@ -15,7 +17,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private Transform worldCanvasTransform;
     [SerializeField] private GameObject _shieldEffect;
     [SerializeField] private GameObject _levelUpUI;
-    [SerializeField] private GameObject _gameOverUI;
+    [SerializeField] private LevelUI _levelUI;
     private AbilityHandler _abilityHandler;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
@@ -33,7 +35,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float _damage = 10.0f;
     private float _moveSpeed = 2.5f;
     private float _baseSpeed;
-    private int _level = 0;
+    private int _level = 1;
     private float _levelUpExperience = 80.0f;  // 레벨업 까지 필요한 경험치
     private float _experience = 0.0f;
 
@@ -48,7 +50,6 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float _bossDamage = 1.0f;
 
     private float _speedBuffTime = 0.0f;
-    private float _speedMultiplier = 0.0f;
     private float _tempSpeedBonus;     // 일시적 버프
 
 
@@ -62,8 +63,9 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private PlayerDefendState _defendState;
     private PlayerDeadState _deadState;
     private CharacterController _characterController;
-    private HPControl _healthUI;
+    private PlayerHealthUI _healthUI;
     private ExpBar _expUI;
+    private StatUI[] _statUI;
 
     public StateMachine StateMachine => _stateMachine;
 
@@ -162,17 +164,23 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _deadState = new PlayerDeadState(this);
         _lastDefendAttackTime = -_defendAttackCoolDown;
 
+        _statUI = FindObjectsByType<StatUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        foreach(var stat in _statUI)
+        {
+            stat.UpdateUI();
+        }
+
         _baseSpeed = _moveSpeed;
     }
     private void Start()
     {
         _stateMachine.ChangeState(_idleState);
-        GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
-        _healthUI = hb.GetComponent<HPControl>();
-        _healthUI.Init(_maxHealth, this.transform);
-        GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
-        _expUI = eb.GetComponent<ExpBar>();
-        _expUI.Init(_levelUpExperience, this.transform);
+        _healthUI = _healthBarPrefab.GetComponent<PlayerHealthUI>();
+        _healthUI.Init(_maxHealth);
+        _expUI = _expBarPrefab.GetComponent<ExpBar>();
+        _expUI.Init(_levelUpExperience);
+        _levelUI.Init();
 
         var data = GameManager.Instance;
     }
@@ -192,13 +200,12 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _levelUpExperience = 80.0f;
         _experience = 0.0f;
         _bossDamage = 0.0f;
-        GameObject hb = Instantiate(_healthBarPrefab, worldCanvasTransform);
-        _healthUI = hb.GetComponent<HPControl>();
-        _healthUI.Init(_maxHealth, this.transform);
+        _healthUI = _healthBarPrefab.GetComponent<PlayerHealthUI>();
+        _healthUI.Init(_maxHealth);
 
-        GameObject eb = Instantiate(_expBarPrefab, worldCanvasTransform);
-        _expUI = eb.GetComponent<ExpBar>();
-        _expUI.Init(_levelUpExperience, this.transform);
+        _expUI = _expBarPrefab.GetComponent<ExpBar>();
+        _expUI.Init(_levelUpExperience);
+        _levelUI.Init();
 
         _abilityHandler.ResetAbilities();
     }
@@ -311,15 +318,12 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             damage = Mathf.Max(damage, 0);
             _currentHealth -= damage;
             _healthUI.TakeDamage(damage);
-            Debug.Log("Defend Success");
-            Debug.Log($"{_maxHealth}");
         }
         else
         {
             if (_stateMachine.GetCurrentState() == _deadState) return;
             _currentHealth -= damage;
             _healthUI.TakeDamage(damage);
-            Debug.Log($"{_maxHealth}");
         }
     }
 
@@ -330,6 +334,18 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             return true;
         }
         return false;
+    }
+
+    public void StartGameOverCoroutine()
+    {
+        StartCoroutine(GameOverDelay());
+    }
+
+    private IEnumerator GameOverDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        GameManager.Instance.GameOver();
     }
 
     /// <summary>
@@ -357,7 +373,6 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     {
         if(_stateMachine.GetCurrentState() == _deadState) return;
 
-        Debug.Log($"Get {amount}exp");
         _experience += amount;
 
         while (_experience >= _levelUpExperience)
@@ -370,7 +385,6 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     private void LevelUp()
     {
-        _levelUpUI.gameObject.SetActive(true);
         EXPManager.instance.LevelUpUI();
         _level++;
         _levelUpExperience += 30.0f;
@@ -379,9 +393,9 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _currentHealth *= _healthIncrease;
         _damage *= _damageIncrease;
 
+        _levelUI.LevelUp(_level);
         _healthUI.UpdateHealth(_maxHealth, _currentHealth);
-        Debug.Log("Level Up!");
-        Debug.Log($"Level: {_level}");
+        UpdateUI();
     }
     public void SpeedBuff(float speed)
     {
@@ -396,7 +410,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private void UpdateMoveSpeed()
     {
         _moveSpeed = _baseSpeed + _tempSpeedBonus;
-        Debug.Log($"Speed: {_moveSpeed}");
+        UpdateUI();
     }
     public void IncreaseBaseSpeed(float value)
     {
@@ -408,16 +422,10 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     public void UpdateUI()
     {
         _healthUI.UpdateHealth(_maxHealth, _currentHealth);
-    }
-
-    public void MainMenuScene(){
-        Debug.Log("GameOver");
-        Time.timeScale = 0f;
-        _gameOverUI.gameObject.SetActive(true);
-    }
-
-    public void MenuChangeCount(){
-        Invoke("MainMenuScene", 2.0f);
+        foreach (var stat in _statUI)
+        {
+            stat.UpdateUI();
+        }
     }
 
     private void LateUpdate()

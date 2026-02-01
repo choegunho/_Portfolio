@@ -35,6 +35,7 @@ public class AbilityHandler : MonoBehaviour
     {
         _abilities.Add(ability);
         ability.OnAcquire(_player);
+        _player.UpdateUI();
     }
 
     public void OnHitMonster(Monster monster)

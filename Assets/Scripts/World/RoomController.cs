@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
-enum RoomType
+public enum RoomType
 {
     Normal,
     Boss
@@ -11,7 +11,8 @@ enum RoomType
 
 public class RoomController : MonoBehaviour
 {
-    [SerializeField] private RoomType _roomType;
+    public Vector2Int gridPos;
+    [SerializeField] public RoomType _roomType;
     private MonsterSpawner _monsterSpawner;
     private Doors[] _doors;
     private int _currentMonster;
@@ -21,6 +22,11 @@ public class RoomController : MonoBehaviour
     private bool _isCleared = false;
 
     private NavMeshSurface _navMeshSurface;
+
+    public bool CurrentRoom
+    {
+        get { return  _currentRoom; }
+    }
 
 
     private void OnTriggerEnter(Collider other)
@@ -44,9 +50,14 @@ public class RoomController : MonoBehaviour
 
     private void Start()
     {
-        if(_roomType == RoomType.Boss)
+        gridPos = new Vector2Int(
+            Mathf.RoundToInt(transform.position.x / 18.0f),
+            Mathf.RoundToInt(transform.position.z / 18.0f)
+        );
+
+        if (MiniMap.Instance != null)
         {
-            GameManager.Instance.RegisterRoomController(this);
+            MiniMap.Instance.AddRoom(this);
         }
     }
 
@@ -76,7 +87,8 @@ public class RoomController : MonoBehaviour
 
     private void ActivateRoom()
     {
-        if(_roomType == RoomType.Boss)
+        MiniMap.Instance.SetCurrentRoom(this);
+        if (_roomType == RoomType.Boss)
         {
             _monsterSpawner.IsBoss = true;
             _monsterSpawner.enabled = true;
@@ -105,6 +117,7 @@ public class RoomController : MonoBehaviour
             _isCleared = true;
             OpenDoors();
             _currentRoom = false;
+            _navMeshSurface.enabled = false;
         }
     }
 

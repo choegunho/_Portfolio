@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerDeadState : IState
@@ -13,7 +14,7 @@ public class PlayerDeadState : IState
         _player.Animator.SetTrigger("Dead");
         Debug.Log("Player is Dead");
 
-        _player.MenuChangeCount();
+        _player.StartGameOverCoroutine();
     }
 
     public void Execute()
