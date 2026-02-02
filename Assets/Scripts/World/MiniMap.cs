@@ -87,4 +87,13 @@ public class MiniMap : MonoBehaviour
             kvp.Value.color = roomTypeColor(kvp.Key);
         }
     }
+
+    public void ResetMiniMap()
+    {
+        foreach(Transform child in _roomContainer)
+        {
+            Destroy(child.gameObject);
+        }
+        _rooms.Clear();
+    }
 }

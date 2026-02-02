@@ -90,6 +90,7 @@ public class GameManager : MonoBehaviour
         string nextStage = $"Stage{num + 1}";
 
         RequestLoadStage(nextStage);
+        MiniMap.Instance.ResetMiniMap();
     }
 
     public void MainMenu()
@@ -155,5 +156,4 @@ public class GameManager : MonoBehaviour
             _spawnPoint = null;
         }
     }
-
 }

@@ -17,8 +17,6 @@ public class RoomController : MonoBehaviour
     private Doors[] _doors;
     private int _currentMonster;
     private bool _currentRoom = false;
-
-    private bool _isEntered = false;
     private bool _isCleared = false;
 
     private NavMeshSurface _navMeshSurface;
@@ -31,11 +29,17 @@ public class RoomController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_isCleared) return;
-
         if(other.gameObject.CompareTag("Player") == true)
         {
             EnterRoom();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.CompareTag("Player") == true)
+        {
+            _currentRoom = false;
         }
     }
 
@@ -63,16 +67,18 @@ public class RoomController : MonoBehaviour
 
     public void EnterRoom()
     {
-        if (_isEntered) return;
-        foreach(var door in _doors)
-        {
-            door.gameObject.SetActive(true);
-        }
-        _isEntered = true;
         _currentRoom = true;
-        CloseDoors();
-        ActivateRoom();
-        _navMeshSurface.enabled = true;
+        MiniMap.Instance.SetCurrentRoom(this);
+        if (!_isCleared)
+        {
+            foreach (var door in _doors)
+            {
+                door.gameObject.SetActive(true);
+            }
+            CloseDoors();
+            ActivateRoom();
+            _navMeshSurface.enabled = true;
+        }
     }
 
     public void DecreaseMonster()
@@ -87,7 +93,6 @@ public class RoomController : MonoBehaviour
 
     private void ActivateRoom()
     {
-        MiniMap.Instance.SetCurrentRoom(this);
         if (_roomType == RoomType.Boss)
         {
             _monsterSpawner.IsBoss = true;
