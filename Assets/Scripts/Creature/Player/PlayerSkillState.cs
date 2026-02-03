@@ -1,18 +1,18 @@
 using UnityEngine;
 
-public class PlayerDefendAttackState : IState
+public class PlayerSkillState : IState
 {
     private PlayerStateController _player;
     private float _enterTime;
 
-    public PlayerDefendAttackState(PlayerStateController player)
+    public PlayerSkillState(PlayerStateController player)
     {
         _player = player;
     }
     public void Enter()
     {
         _enterTime = Time.time;
-        _player.Animator.SetTrigger("DefendAttack");
+        _player.Animator.SetTrigger("Skill");
     }
 
     public void Execute()
@@ -34,8 +34,6 @@ public class PlayerDefendAttackState : IState
             return;
         }
 
-        // Safety net: if we didn't enter Attack02 shortly after triggering, don't get stuck in this state.
-        // (Can happen if animator state name differs, transitions change, or trigger is consumed unexpectedly.)
         if (Time.time - _enterTime >= 0.25f && !animator.IsInTransition(0))
         {
             Vector2 input = _player.GetMoveInput();

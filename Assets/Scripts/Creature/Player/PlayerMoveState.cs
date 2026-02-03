@@ -23,6 +23,7 @@ public class PlayerMoveState : IState
         }
         _player.Move(input);
         _player.Attack();
+        _player.SkillAttack();
         _player.Defend();
         if (_player.IsDead())
         {

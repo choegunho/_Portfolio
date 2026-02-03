@@ -22,6 +22,7 @@ public class PlayerIdleState : IState
         }
 
         _player.Attack();
+        _player.SkillAttack();
         _player.Defend();
         if (_player.IsDead())
         {

@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 
 public class PlayerStateController : MonoBehaviour, GetDamage
@@ -18,6 +19,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private GameObject _shieldEffect;
     [SerializeField] private GameObject _levelUpUI;
     [SerializeField] private LevelUI _levelUI;
+    [SerializeField] private GameObject _skillEffect;
     private AbilityHandler _abilityHandler;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
@@ -39,8 +41,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float _levelUpExperience = 80.0f;  // 레벨업 까지 필요한 경험치
     private float _experience = 0.0f;
 
-    private float _defendAttackCoolDown = 10.0f;
-    private float _lastDefendAttackTime;
+    private float _skillAttackCoolDown = 5.0f;
+    private float _lastSkillAttackTime;
 
     private float _attackCoolDown = 0.75f;
     private float _lastAttackTime;
@@ -59,7 +61,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private PlayerIdleState _idleState;
     private PlayerMoveState _moveState;
     private PlayerAttackState _attackState;
-    private PlayerDefendAttackState _defendAttackState;
+    private PlayerSkillState _skillAttackState;
     private PlayerDefendState _defendState;
     private PlayerDeadState _deadState;
     private CharacterController _characterController;
@@ -75,7 +77,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public PlayerAttackState AttackState => _attackState;
 
-    public PlayerDefendAttackState DefendAttackState => _defendAttackState;
+    public PlayerSkillState SkillAttackState => _skillAttackState;
 
     public PlayerDefendState DefendState => _defendState;
 
@@ -159,10 +161,10 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _idleState = new PlayerIdleState(this);
         _moveState = new PlayerMoveState(this);
         _attackState = new PlayerAttackState(this);
-        _defendAttackState = new PlayerDefendAttackState(this);
+        _skillAttackState = new PlayerSkillState(this);
         _defendState = new PlayerDefendState(this);
         _deadState = new PlayerDeadState(this);
-        _lastDefendAttackTime = -_defendAttackCoolDown;
+        _lastSkillAttackTime = -_skillAttackCoolDown;
 
         _statUI = FindObjectsByType<StatUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
@@ -265,16 +267,51 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         }
     }
 
-    public void DefendAttack()
+    public void SkillAttack()
     {
-        _lastDefendAttackTime = Time.time;
-        _stateMachine.ChangeState(DefendAttackState);
-        _canAttack = false;
+        if (Input.GetKeyDown(KeyCode.Q) && CanSkillAttack())
+        {
+            _lastSkillAttackTime = Time.time;
+            _stateMachine.ChangeState(SkillAttackState);
+            _canAttack = false;
+        }
     }
 
-    public bool CanDefendAttack()
+    private void SlashSkill()
     {
-        return Time.time >= _lastDefendAttackTime + _defendAttackCoolDown;
+        float radius = 1.3f;
+        float angle = 120.0f;
+        float damage = SetDamage();
+
+        Instantiate(_skillEffect, transform.position, Quaternion.LookRotation(-transform.forward));
+
+        Collider[] hits = Physics.OverlapSphere(
+            transform.position,
+            radius);
+
+        foreach(var hit in hits)
+        {
+            Monster monster = hit.GetComponent<Monster>();
+            Vector3 dir = (hit.transform.position - transform.position).normalized;
+
+            float dot = Vector3.Dot(transform.forward, dir);
+            float limit = Mathf.Cos((angle * 0.5f) * Mathf.Deg2Rad);
+
+            if (dot < limit || monster == null) continue;
+
+            monster.GetDamage(damage);
+        }
+    }
+
+    public bool CanSkillAttack()
+    {
+        return Time.time >= _lastSkillAttackTime + _skillAttackCoolDown;
+    }
+
+    public float GetRemainSkillCoolTime()
+    {
+        float remain = (_lastSkillAttackTime + _skillAttackCoolDown) - Time.time;
+        return Mathf.Max(remain, 0f);
     }
 
     public bool CheckCanAttack()
@@ -289,7 +326,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public float SetDamage()
     {
-        if(StateMachine.GetCurrentState() == _defendAttackState)
+        if(StateMachine.GetCurrentState() == _skillAttackState)
         {
             return _damage * 1.5f;
         }
