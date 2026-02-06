@@ -20,6 +20,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private GameObject _levelUpUI;
     [SerializeField] private LevelUI _levelUI;
     [SerializeField] private GameObject _skillEffect;
+    [SerializeField] private GameObject _projectileSkill;
     private AbilityHandler _abilityHandler;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
@@ -44,6 +45,9 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private float _skillAttackCoolDown = 5.0f;
     private float _lastSkillAttackTime;
 
+    private float _projectileSkillCoolDown = 9.0f;
+    private float _lastProjectileSkillTime;
+
     private float _attackCoolDown = 0.75f;
     private float _lastAttackTime;
 
@@ -61,6 +65,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     private PlayerIdleState _idleState;
     private PlayerMoveState _moveState;
     private PlayerAttackState _attackState;
+    private PlayerLongDistanceSkillState _projectileSkillState;
     private PlayerSkillState _skillAttackState;
     private PlayerDefendState _defendState;
     private PlayerDeadState _deadState;
@@ -76,6 +81,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     public PlayerMoveState MoveState => _moveState;
 
     public PlayerAttackState AttackState => _attackState;
+
+    public PlayerLongDistanceSkillState ProjectileSkillState => _projectileSkillState;
 
     public PlayerSkillState SkillAttackState => _skillAttackState;
 
@@ -162,9 +169,11 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         _moveState = new PlayerMoveState(this);
         _attackState = new PlayerAttackState(this);
         _skillAttackState = new PlayerSkillState(this);
+        _projectileSkillState = new PlayerLongDistanceSkillState(this);
         _defendState = new PlayerDefendState(this);
         _deadState = new PlayerDeadState(this);
         _lastSkillAttackTime = -_skillAttackCoolDown;
+        _lastProjectileSkillTime = - _projectileSkillCoolDown;
 
         _statUI = FindObjectsByType<StatUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
@@ -275,31 +284,52 @@ public class PlayerStateController : MonoBehaviour, GetDamage
             _stateMachine.ChangeState(SkillAttackState);
             _canAttack = false;
         }
+
+        if(Input.GetKeyDown(KeyCode.R) && CanProjectileSkillAttack())
+        {
+            _lastProjectileSkillTime = Time.time;
+            _stateMachine.ChangeState(ProjectileSkillState);
+            _canAttack = false;
+        }
     }
 
-    private void SlashSkill()
+    private void Skill()
     {
-        float radius = 1.3f;
-        float angle = 120.0f;
-        float damage = SetDamage();
-
-        Instantiate(_skillEffect, transform.position, Quaternion.LookRotation(-transform.forward));
-
-        Collider[] hits = Physics.OverlapSphere(
-            transform.position,
-            radius);
-
-        foreach(var hit in hits)
+        if(StateMachine.GetCurrentState() == _skillAttackState)
         {
-            Monster monster = hit.GetComponent<Monster>();
-            Vector3 dir = (hit.transform.position - transform.position).normalized;
+            float radius = 1.3f;
+            float angle = 120.0f;
+            float damage = SetDamage();
 
-            float dot = Vector3.Dot(transform.forward, dir);
-            float limit = Mathf.Cos((angle * 0.5f) * Mathf.Deg2Rad);
+            Instantiate(_skillEffect, transform.position, Quaternion.LookRotation(-transform.forward));
 
-            if (dot < limit || monster == null) continue;
+            Collider[] hits = Physics.OverlapSphere(
+                transform.position,
+                radius);
 
-            monster.GetDamage(damage);
+            foreach (var hit in hits)
+            {
+                Monster monster = hit.GetComponent<Monster>();
+                Vector3 dir = (hit.transform.position - transform.position).normalized;
+
+                float dot = Vector3.Dot(transform.forward, dir);
+                float limit = Mathf.Cos((angle * 0.5f) * Mathf.Deg2Rad);
+
+                if (dot < limit || monster == null) continue;
+
+                monster.GetDamage(damage);
+            }
+        }
+        else if(StateMachine.GetCurrentState() == _projectileSkillState)
+        {
+            float damage = SetDamage();
+            Vector3 _firepos = transform.position + new Vector3(0.0f, 0.5f, 0.0f);
+            GameObject projectile = Instantiate(
+                _projectileSkill,
+                _firepos + transform.forward,
+                transform.rotation * _projectileSkill.transform.rotation
+            );
+            projectile.GetComponent<ProjectileSkill>().SetDamage(damage);
         }
     }
 
@@ -308,10 +338,21 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         return Time.time >= _lastSkillAttackTime + _skillAttackCoolDown;
     }
 
+    public bool CanProjectileSkillAttack()
+    {
+        return Time.time >= _lastProjectileSkillTime + _projectileSkillCoolDown;
+    }
+
     public float GetRemainSkillCoolTime()
     {
         float remain = (_lastSkillAttackTime + _skillAttackCoolDown) - Time.time;
-        return Mathf.Max(remain, 0f);
+        return Mathf.Max(remain, 0.0f);
+    }
+
+    public float GetRemainProjectileSkillCoolTime()
+    {
+        float remain = (_lastProjectileSkillTime + _projectileSkillCoolDown) - Time.time;
+        return Mathf.Max(remain, 0.0f);
     }
 
     public bool CheckCanAttack()
@@ -330,7 +371,11 @@ public class PlayerStateController : MonoBehaviour, GetDamage
         {
             return _damage * 1.5f;
         }
-        return _damage;
+        else if(StateMachine.GetCurrentState() == _projectileSkillState)
+        {
+            return _damage * 1.7f;
+        }
+            return _damage;
     }
 
     public void Defend()

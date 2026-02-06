@@ -1215,7 +1215,7 @@ GameObject:
   - component: {fileID: -654343224374200143}
   m_Layer: 0
   m_Name: Bat_Green
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
