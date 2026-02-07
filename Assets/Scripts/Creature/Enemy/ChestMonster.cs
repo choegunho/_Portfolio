@@ -9,7 +9,7 @@ public class ChestMonster : Monster
         _name = "Mimic";
         _health = 700.0f;
         _damage = 25.0f;
-        _experience = 40.0f;
+        _experience = 65.0f;
 
         base.Awake();
     }

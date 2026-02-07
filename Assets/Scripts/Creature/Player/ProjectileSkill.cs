@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class ProjectileSkill : MonoBehaviour
 {
-    [SerializeField] private float _speed = 6.0f;
+    private float _speed = 4.0f;
     private float _damage;
     private float _elapsedTime = 0.0f;
-    private float _laptime = 1.5f;
+    private float _laptime = 1.0f;
     private PlayerStateController _player;
 
     private void Awake()

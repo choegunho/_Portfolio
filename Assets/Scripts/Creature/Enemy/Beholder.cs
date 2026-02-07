@@ -13,7 +13,7 @@ public class Beholder : Monster
         _name = "Beholder";
         _health = 250.0f;
         _damage = 22.0f;
-        _experience = 40.0f;
+        _experience = 55.0f;
         
         _chaseRange = 5.0f;
         _attackRange = 3.0f;

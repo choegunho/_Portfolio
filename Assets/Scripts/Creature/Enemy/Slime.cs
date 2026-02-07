@@ -7,7 +7,7 @@ public class Slime : Monster
         _name = "Slime";
         _health = 55.0f;
         _damage = 6.0f;
-        _experience = 20.0f;
+        _experience = 25.0f;
 
         base.Awake();
     }

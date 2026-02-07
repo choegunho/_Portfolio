@@ -21,6 +21,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     [SerializeField] private LevelUI _levelUI;
     [SerializeField] private GameObject _skillEffect;
     [SerializeField] private GameObject _projectileSkill;
+    [SerializeField] private SkillCoolDown _skillController;
     private AbilityHandler _abilityHandler;
     private float _rotateSpeed = 5.0f;
     private float gravity = -9.81f;
@@ -278,14 +279,14 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public void SkillAttack()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && CanSkillAttack())
+        if (Input.GetKeyDown(KeyCode.Q) && CanSkillAttack() && _level >= 3)
         {
             _lastSkillAttackTime = Time.time;
             _stateMachine.ChangeState(SkillAttackState);
             _canAttack = false;
         }
 
-        if(Input.GetKeyDown(KeyCode.R) && CanProjectileSkillAttack())
+        if(Input.GetKeyDown(KeyCode.R) && CanProjectileSkillAttack() && _level >= 8)
         {
             _lastProjectileSkillTime = Time.time;
             _stateMachine.ChangeState(ProjectileSkillState);
@@ -353,6 +354,19 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     {
         float remain = (_lastProjectileSkillTime + _projectileSkillCoolDown) - Time.time;
         return Mathf.Max(remain, 0.0f);
+    }
+
+    private void SkillUnLock()
+    {
+        if(_level == 3)
+        {
+            _skillController.ActivateSlashSkill();
+        }
+        if(_level == 8)
+        {
+            _skillController.ActivateProjectileSkill();
+        }
+        return;
     }
 
     public bool CheckCanAttack()
@@ -469,6 +483,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     {
         EXPManager.instance.LevelUpUI();
         _level++;
+        SkillUnLock();
         _levelUpExperience += 30.0f;
 
         _maxHealth *= _healthIncrease;

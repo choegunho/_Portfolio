@@ -128,6 +128,7 @@ public class Monster : MonoBehaviour, GetDamage
     {
         _health *= 2.0f;
         _damage *= 1.2f;
+        _experience += 15.0f;
         _outline.Activate();
     }
 

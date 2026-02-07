@@ -7,7 +7,7 @@ public class Ghost : Monster
         _name = "Ghost";
         _health = 45.0f;
         _damage = 8.0f;
-        _experience = 15.0f;
+        _experience = 20.0f;
 
         base.Awake();
     }

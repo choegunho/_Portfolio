@@ -8,7 +8,7 @@ public class Skeleton : Monster
         _name = "Skeleton";
         _health = 300.0f;
         _damage = 30.0f;
-        _experience = 35.0f;
+        _experience = 50.0f;
 
         base.Awake();
     }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,16 +6,40 @@ public class SkillCoolDown : MonoBehaviour
 {
     [SerializeField] Text _slashSkillCoolDownText;
     [SerializeField] Text _projectileSkillCoolDownText;
+    [SerializeField] Image _slashskillImage;
+    [SerializeField] Image _projectileSkillImage;
     [SerializeField] PlayerStateController _player;
-    private float _skillCool;
+
+    private bool _activateSlashSkill = false;
+    private bool _activateProjectileSkill = false;
 
     private void Start()
     {
-        _slashSkillCoolDownText.enabled = false;
-        _projectileSkillCoolDownText.enabled = false;
+        _slashskillImage.color = new Color32(70, 70, 70, 255);
+        _projectileSkillImage.color = new Color32(70, 70, 70, 255);
     }
 
-    public void SlashSkillCoolDown()
+    public void ActivateSlashSkill()
+    {
+        _slashskillImage.color = new Color32(255, 255, 255, 255);
+        _slashSkillCoolDownText.text = " ";
+        _slashSkillCoolDownText.fontSize = 40;
+        _slashSkillCoolDownText.color = Color.black;
+        _slashSkillCoolDownText.enabled = false;
+        _activateSlashSkill = true;
+    }
+
+    public void ActivateProjectileSkill()
+    {
+        _projectileSkillImage.color = new Color32(255, 255, 255, 255);
+        _projectileSkillCoolDownText.text = " ";
+        _projectileSkillCoolDownText.fontSize = 40;
+        _projectileSkillCoolDownText.color = Color.black;
+        _projectileSkillCoolDownText.enabled = false;
+        _activateProjectileSkill = true;
+    }
+
+    private void SlashSkillCoolDown()
     {
         float remain = _player.GetRemainSkillCoolTime();
 
@@ -29,7 +54,7 @@ public class SkillCoolDown : MonoBehaviour
         }
     }
 
-    public void ProjectileSkillCoolDown()
+    private void ProjectileSkillCoolDown()
     {
         float remain = _player.GetRemainProjectileSkillCoolTime();
 
@@ -46,7 +71,13 @@ public class SkillCoolDown : MonoBehaviour
 
     public void Update()
     {
-        SlashSkillCoolDown();
-        ProjectileSkillCoolDown();
+        if (_activateSlashSkill)
+        {
+            SlashSkillCoolDown();
+        }
+        if (_activateProjectileSkill)
+        {
+            ProjectileSkillCoolDown();
+        }
     }
 }
