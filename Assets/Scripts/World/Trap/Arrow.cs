@@ -4,9 +4,8 @@ public class Arrow : MonoBehaviour
 {
     private Transform _player;
     private float _damage = 30.0f;
-    private float _time = 0.0f;
     private float _moveSpeed = 5.0f;
-    private float _laptime = 3.5f;
+    private float _lapTime;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -18,7 +17,7 @@ public class Arrow : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
-        else if(other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        else if(other.gameObject.layer == LayerMask.NameToLayer("Wall") && _lapTime >= 1.0f)
         {
             Destroy(this.gameObject);
         }
@@ -26,6 +25,7 @@ public class Arrow : MonoBehaviour
 
     private void Update()
     {
+        _lapTime += Time.deltaTime;
         transform.position += -transform.forward * Time.deltaTime * _moveSpeed;
     }
 }

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ArrowTrap : MonoBehaviour
@@ -21,8 +23,20 @@ public class ArrowTrap : MonoBehaviour
         {
             _trapTime = Time.time;
             _trapCool = false;
-            Instantiate(_arrowPrefab, transform.position, transform.rotation);
+            StartCoroutine(SpawnArrow());
         } 
+    }
+
+    private IEnumerator SpawnArrow() 
+    {
+        int count = 3;
+        float delay = 0.3f;
+
+        for(int i= 0; i < count; i++)
+        {
+            Instantiate(_arrowPrefab, transform.position, transform.rotation);
+            yield return new WaitForSeconds(delay);
+        }
     }
 
     private void Update()

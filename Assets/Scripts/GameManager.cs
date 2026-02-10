@@ -67,11 +67,6 @@ public class GameManager : MonoBehaviour
         _statUI.SetActive(false);
     }
 
-    public void SetSpawnPoint(Transform spawnPoint)
-    {
-        _spawnPoint = spawnPoint;
-    }
-
     public void RequestLoadStage(string stage)
     {
         StartCoroutine(LoadStage(stage));
