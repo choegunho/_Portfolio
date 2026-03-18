@@ -6,8 +6,8 @@ public class Skeleton : Monster
     protected override void Awake()
     {
         _name = "Skeleton";
-        _health = 300.0f;
-        _damage = 30.0f;
+        _health = 120.0f;
+        _damage = 25.0f;
         _experience = 50.0f;
 
         base.Awake();

@@ -17,6 +17,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _statUI;
     private string _currentStage;
     private Transform _spawnPoint;
+    private bool _changeStage = false; 
+
+    public bool ChangeStage
+    {
+        get { return _changeStage; }
+    }
 
     public Transform PlayerTransform
     {
@@ -76,13 +82,14 @@ public class GameManager : MonoBehaviour
     {
         _player.position = spawnPoint.position;
         _player.rotation = spawnPoint.rotation;
-
+        _changeStage = false;
     }
     public void ClearStage()
     {
         int num = int.Parse(_currentStage.Replace("Stage", ""));
         if (num >= 3) return;
         string nextStage = $"Stage{num + 1}";
+        _changeStage = true;
 
         RequestLoadStage(nextStage);
         MiniMap.Instance.ResetMiniMap();
@@ -113,6 +120,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(hpBar.gameObject);
         }
+
+        MiniMap.Instance.ResetMiniMap();
     }
 
     public IEnumerator LoadStage(string stage)

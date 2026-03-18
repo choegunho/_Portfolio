@@ -35,8 +35,8 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     // 플레이어 스탯
     private float _maxHealth = 100.0f;
     private float _currentHealth;
-    private float _defend = 5.0f;
-    private float _damage = 10.0f;
+    private float _defend = 7.0f;
+    private float _damage = 12.0f;
     private float _moveSpeed = 2.5f;
     private float _baseSpeed;
     private int _level = 1;
@@ -228,10 +228,15 @@ public class PlayerStateController : MonoBehaviour, GetDamage
     /// <returns></returns>
     public Vector2 GetMoveInput()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        if (!GameManager.Instance.ChangeStage)
+        {
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
 
-        return new Vector2(horizontal, vertical).normalized;
+            return new Vector2(horizontal, vertical).normalized;
+        }
+
+        return Vector2.zero;
     }
 
     public void Move(Vector2 input)
@@ -269,7 +274,7 @@ public class PlayerStateController : MonoBehaviour, GetDamage
 
     public void Attack()
     {
-        if (Input.GetMouseButtonDown(0) && CheckCanAttack())
+        if (Input.GetMouseButtonDown(0) && CheckCanAttack() && !GameManager.Instance.ChangeStage)
         {
             _canAttack = false;
             _stateMachine.ChangeState(AttackState);

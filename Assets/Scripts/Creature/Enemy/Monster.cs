@@ -199,7 +199,8 @@ public class Monster : MonoBehaviour, GetDamage
 
         if (_player != null)
         {
-            _nmAgent.SetDestination(_player.position);
+            _nmAgent.SetDestination(_player.transform.position);
+
             _animator.SetBool("IsWalk", true);
         }
     }
@@ -207,7 +208,7 @@ public class Monster : MonoBehaviour, GetDamage
     protected virtual void Attack()
     {
         if (_currentState == State.Dead || _player == null) return;
-
+            
         Vector3 lookDir = (_player.position - transform.position).normalized;
         lookDir.y = 0.0f;
 

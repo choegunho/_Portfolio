@@ -11,7 +11,7 @@ public class Beholder : Monster
     protected override void Awake()
     {
         _name = "Beholder";
-        _health = 250.0f;
+        _health = 170.0f;
         _damage = 22.0f;
         _experience = 55.0f;
         
