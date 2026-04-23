@@ -1,7 +1,7 @@
 # [Unity 3D] TopDown Roguelike Game Portfolio
 # 1. 소개
-<img width="480" height="480" alt="image" src="https://github.com/user-attachments/assets/7b773bf1-6f98-42c0-93de-9360e9059608" /> <img width="480" height="480" alt="image" src="https://github.com/user-attachments/assets/498f8838-7699-43a9-b809-61f88dad3ae8" /> 
-<img width="480" height="480" alt="image" src="https://github.com/user-attachments/assets/c4ef4cbb-4aa1-4930-8945-d3c559071433" /> <img width="480" height="480" alt="image" src="https://github.com/user-attachments/assets/d8a5af3c-d941-49de-a53a-0f1212d6a2a3" />
+<img width="400" height="350" alt="image" src="https://github.com/user-attachments/assets/7b773bf1-6f98-42c0-93de-9360e9059608" /> <img width="400" height="350" alt="image" src="https://github.com/user-attachments/assets/498f8838-7699-43a9-b809-61f88dad3ae8" /> 
+<img width="400" height="350" alt="image" src="https://github.com/user-attachments/assets/c4ef4cbb-4aa1-4930-8945-d3c559071433" /> <img width="400" height="350" alt="image" src="https://github.com/user-attachments/assets/d8a5af3c-d941-49de-a53a-0f1212d6a2a3" />
 
 - Unity 3D Roguelike 게임입니다
 - 개발기간: 2025.12.08 ~ 2026.01.30 (약 2개월)
@@ -165,7 +165,7 @@ ScriptableObject를 활용하여
 
 각 능력은 랜덤한 3개가 등장하고 한개만 고를 수 있습니다.
 
-<img width="500" height="580" alt="스크린샷 2026-03-19 030840" src="https://github.com/user-attachments/assets/039be3f8-4d01-443c-908c-8bc766897c1a" />
+<img width="500" height="380" alt="스크린샷 2026-03-19 030840" src="https://github.com/user-attachments/assets/039be3f8-4d01-443c-908c-8bc766897c1a" />
 
 각각의 능력은 ScriptableObject로 데이터화 하여 관리 하였습니다.
 
@@ -211,7 +211,7 @@ Async Scene Loading을 사용하여 씬 전환 시 로딩 지연 없이 자연�
 
 Persistent Scene + Stage Scene 분리 구조를 사용하여 UI, 카메라, 매니저 객체를 유지하여 스테이지만 교체하는 방법을 사용했습니다.
 
-<img width="700" height="1024" alt="ChatGPT Image 2026년 3월 18일 오전 02_17_10" src="https://github.com/user-attachments/assets/5c81796c-c5ab-4ce3-be40-a9f647b9205e" />
+<img width="700" height="650" alt="ChatGPT Image 2026년 3월 18일 오전 02_17_10" src="https://github.com/user-attachments/assets/5c81796c-c5ab-4ce3-be40-a9f647b9205e" />
 
 ---
 
